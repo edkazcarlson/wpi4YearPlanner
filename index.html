@@ -1,8 +1,10 @@
 <!doctype html>
 <html>
 <head>
-    <title>Tutorial 1: Getting Started</title>
-    <script src='cytoscape.js'></script>
+    <title>WPI 4 Year Planner</title>
+    <script src='js/cytoscape.js'></script>
+	<script src='js/myGraph.js'></script>
+
 </head>
 
 <style>
@@ -16,21 +18,11 @@
 </style>
 
 <body>
-    <div id="cy"></div>
+	<div id="cy"></div>
+	<span class="fa fa-bars config-toggle" id="config-toggle"></span>
+	<button id = config type = "button" onclick = "click()">TEST</button>
+    
+	
 </body>
-<script>
-var cy = cytoscape({
-  container: document.getElementById('cy'),
-  elements: [
-    { data: { id: 'a' } },
-    { data: { id: 'b' } },
-    {
-      data: {
-        id: 'ab',
-        source: 'a',
-        target: 'b'
-      }
-    }]
-});
-</script>
+
 </html>
