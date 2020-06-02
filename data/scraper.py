@@ -4,6 +4,7 @@ import csv
 from bs4 import BeautifulSoup
 import datetime
 import courseGraph
+import re
 
 courseHome = 'https://www.wpi.edu/academics/calendar-courses/course-descriptions'
 wpiURL = 'https://www.wpi.edu'
@@ -21,7 +22,14 @@ for link in departmentLinks:
 	response.encoding = 'utf-8'
 	soup = BeautifulSoup(response.text, "html.parser")
 	courses = soup.findAll("div", {"class": "item-list"})
-	print(courses)
 	for course in courses:
-		print()
-	break
+		courseh3 = course.find("h3").text
+		print(courseh3)
+		courseID = re.findall('[a-zA-Z]{2,4}\s*[0-9]{3}[X]|[a-zA-Z]{2,4}\s*[0-9]{4}|[a-zA-Z]{2,4}\s*[0-9]{3}|[a-zA-Z]{2,4}\s*[0-9]{2}[X]', courseh3)
+		courseID = courseID[0]
+		courseTitle = courseh3[len(courseID)+2:]
+		courseDesc = course.find("div", {"class": "field-content"}).text
+		courseLevel = courseID.split(" ")[1]
+		deptAbbrev =  courseID.split(" ")[0]
+		c = courseGraph.courseNode(courseTitle, courseLevel, deptAbbrev, courseDesc)
+		c.toJson()
