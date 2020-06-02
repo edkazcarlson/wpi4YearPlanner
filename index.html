@@ -2,30 +2,24 @@
 <html>
 <head>
     <title>WPI 4 Year Planner</title>
-    <script src='js/cytoscape.js'></script>
-	<script src='js/myGraph.js'></script>
+    <script src='js/demo-kanban.js'></script>
+	<script src='js/muuri.js'></script>
+	<script src='js/index.js'></script>
+	<link rel="stylesheet" href="css/demo-kanban.css">
 	<link rel="stylesheet" href="css/skeleton.css">
 	<link rel="stylesheet" href="css/index.css">
 </head>
 
-<style>
-    #cy {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-    }
-</style>
-
 <body>
-	<div id="cy" class = "main"></div>
+	<section class="kanban-demo">
+		<h2 class="section-title"><span>4 Year Planner</span></h2>
+		<div id = "board" class="board muuri" style="height: 445px;">
+		</div>
+	</section>
 	<div id = "sidebar" class = "sidebar">
-		<button id = config type = "button" onclick = "click()">TEST</button>
+			<input id = "courseSearcher" type = "text" placeholder = "Search...">
+			<button id = "entryButton" type = "button">TEST</button>
 	</div>
-	
-
-	
 </body>
 
 </html>

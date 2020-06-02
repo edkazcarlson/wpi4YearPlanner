@@ -1,32 +1,20 @@
-body {
-  font: 14pt Open Sans;
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
+.sidebar {
+	height: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	width: 150px;
+	margin: 20px
 }
 
-.main {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 20em;
-  bottom: 0;
-  z-index: 1;
+.sidebar input{
 }
 
-.sidebar{
-	box-sizing: border-box;
-    padding: 0.25em 0.5em;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 20em;
-    background: #fff;
-    border-left: 1px solid #ddd;
-    z-index: 2;
-    overflow: auto;
+.sidebar button{
+	
+}
+
+.kanban-demo{
+	margin-right: 150px;
 }
