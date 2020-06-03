@@ -30,18 +30,15 @@ class courseNode:
 		self.courseTitle, self.courseLevel, self.deptAbbrev,  self.description = courseTitle, courseLevel, deptAbbrev, description
 		self.requirements, self.isCatOne, self.startYear = self.parseDesc(description)
 	def toJson(self):
-		toJsonDict = {"Course Name": self.courseTitle,
-					"Course Level": self.courseLevel,
-					"Dept Abbreviation": self.deptAbbrev,
-					"Course Description": self.description,
-					"Requirements": self.requirements,
-					"Is Cat 1": self.isCatOne,
-					"Start Year For Cat 2": self.startYear}
-		deptRoot = courseNode.fileRoot + self.deptAbbrev + '/'
-		if not os.path.isdir(deptRoot): #if folder does not exist yet for this department
-			os.mkdir(deptRoot)
+		toJsonDict = {"title": self.courseTitle,
+					"level": self.courseLevel,
+					"abbreviation": self.deptAbbrev,
+					"description": self.description,
+					"req": self.requirements,
+					"cat1Status": self.isCatOne,
+					"startYear": self.startYear}
 		jsonForm = json.dumps(toJsonDict)
-		with open(deptRoot + str(self.courseLevel) + '.json', 'w') as outfile:
+		with open('courseData/' + str(self.deptAbbrev) + str(self.courseLevel) + '.json', 'w') as outfile:
 			json.dump(jsonForm, outfile)
 	
 #c = courseNode(1, 1, 1, 'Cat. II Algorithms and programming techniques from artificial intelligence (AI) are key contributors to the experience of modern computer games and interactive media, either by directly controlling a non-player character (NPC) or through more subtle manipulation of the environment. This course will focus on the practical AI programming techniques currently used in computer games for NPC navigation and decision-making, along with the design issues that arise when AI is applied in computer games, such as believability and real-time performance. The course will also briefly discuss future directions in applying AI to games and media. Students will be expected to complete significant software development projects using the studied techniques. Recommended background: object-oriented design concepts (CS 2102), algorithms (CS 2223), and knowledge of technical game development (IMGD 3000). This course will be offered in 2016-17, and in alternating years thereafter.')
