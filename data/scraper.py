@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import datetime
 import courseGraph
 import re
+import os
+import json
 
 courseHome = 'https://www.wpi.edu/academics/calendar-courses/course-descriptions'
 wpiURL = 'https://www.wpi.edu'
@@ -33,3 +35,11 @@ for link in departmentLinks:
 		deptAbbrev =  courseID.split(" ")[0]
 		c = courseGraph.courseNode(courseTitle, courseLevel, deptAbbrev, courseDesc)
 		c.toJson()
+fileList = os.listdir('courseData')
+masterDict = {}
+for file in fileList:
+	with open ('courseData' + '/' + file) as jsonFile:
+		masterDict[file] = json.load(jsonFile)
+jsonForm = json.dumps(masterDict)
+with open('allCourses.json', 'w') as outfile:
+	json.dump(jsonForm, outfile)

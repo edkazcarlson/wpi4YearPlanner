@@ -1,12 +1,17 @@
 function myLoad(){
-//console.log('load')
-//var col = document.createElement("div");
-//col.classList.add("board-column",  "done", "muuri-item", "muuri-item-shown");
-//var header = document.createElement("div");
-//header.classList.add("board-column-header", "muuri");
-//col.appendChild(header)
-//var element = document.getElementById("board");
-//element.appendChild(col);
+/* 	fetch('data/allCourses.json').then(results => results.json()).then(console.log);
+	new autoComplete({
+    selector: '#courseSearcher',
+    minChars: 2,
+    source: function(term, suggest){
+        term = term.toLowerCase();
+        var choices = ['ActionScript', 'AppleScript', 'Asp'];
+        var matches = [];
+        for (i=0; i<choices.length; i++)
+            if (~choices[i].toLowerCase().indexOf(term)) matches.push(choices[i]);
+        suggest(matches);
+    }
+}); */
 }
 
 window.onload = myLoad
