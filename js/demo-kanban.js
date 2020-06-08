@@ -29,7 +29,6 @@ function genYears(grid,yearArray, termArray){
 			col.appendChild(colContent);
 			colContent.appendChild(item);
 			item.appendChild(course);
-			console.log(grid);
 			grid.add(col);
 		})
 	})
@@ -58,6 +57,7 @@ function addCourse(){
 	let course = document.createElement("div");
 	course.classList.add("board-item-content");
 	course.setAttribute("style", "opacity: 1; transform: scale(1);")
+	course.innerHTML = document.getElementById('courseSearcher').value;
 	item.appendChild(course);
 	colToAttachTo.appendChild(item);
 	//console.log(boardGrid);
@@ -105,8 +105,8 @@ async function initAutoComplete(){
 function initMuuri(){
 	console.log('init murri called');
 	var docElem = document.documentElement;
-	var kanban = document.querySelector('.kanban-demo');
-	var itemContainers = Array.prototype.slice.call(kanban.querySelectorAll('.board-column-content'));
+	var kanban = document.querySelector('.boardSection');
+	var itemContainers = Array.prototype.slice.call(kanban.querySelectorAll('.board-item-content'));
 	var columnGrids = [];
 	var dragCounter = 0;
 	itemContainers.forEach(function (container) {
@@ -164,7 +164,7 @@ function initBoardGrid(){
 			minBounceBackAngle: 0
 		},
 		dragStartPredicate: {
-			handle: '.board-column-header'
+			handle: '.board-item-content'
 		},
 		dragReleaseDuration: 400,
 		dragReleaseEasing: 'ease'
@@ -174,7 +174,7 @@ function initBoardGrid(){
 
 
 document.addEventListener('DOMContentLoaded', function () {
-	var kanban = document.querySelector('.kanban-demo');
+	var kanban = document.querySelector('.boardSection');
 	var board = kanban.querySelector('.board');
 
 
@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	 
 		function createInstance() {
 			var object = initBoardGrid();
-			console.log(object);
 			return object;
 		}
 	 
@@ -196,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		};
 	})();
-	console.log(boardGrid.getInstance());
 	
 	let button = document.getElementById('entryButton');
 	button.onclick = addCourse;
@@ -205,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	let termArray = ['A', 'B', 'C', 'D'];
 	genYears(boardGrid.getInstance(),yearArray, termArray);		
 	initAutoComplete();
-	initMuuri(boardGrid);
+	//initMuuri(boardGrid);
 	
 	
 	
