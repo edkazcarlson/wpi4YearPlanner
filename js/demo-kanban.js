@@ -1,106 +1,7 @@
 var boardGrid = null;
-function genYears(grid,yearArray, termArray){
-	yearArray.forEach(year => {
-		termArray.forEach(term => {
-			let col = document.createElement("div");
-			col.id = year + term
-			col.classList.add("board-column",  "done", "muuri-item", "muuri-item-shown");
-			
-			let header = document.createElement("div");
-			header.classList.add("board-column-header");
-			
-			let colContent = document.createElement("div");
-			colContent.classList.add("board-column-content", "muuri");
-			colContent.style.height = '70px'
-			colContent.id = year + term + 'colContent';
-			let label = document.createTextNode(year + ' ' + term + ' term');
-			
-			let item = document.createElement("div");
-			item.classList.add("board-item", "muuri-item", "muuri-item-shown");
-			item.setAttribute("style", 'left: 0px; top: 0px; transform: translateX(0px) translateY(0px); display: block; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);')
-			
-			
-			let course = document.createElement("div");
-			course.classList.add("board-item-content");
-			course.setAttribute("style", "opacity: 1; transform: scale(1);")
-			
-			col.appendChild(header);
-			header.appendChild(label)
-			col.appendChild(colContent);
-			colContent.appendChild(item);
-			item.appendChild(course);
-			grid.add(col);
-		})
-	})
 
-}
 
-function addCourse(){
-	//let boardGrid = initBoardGrid();
-	console.log('add course called');
-	let searcher = document.getElementById('courseSearcher');
-	//if level is 3 or 4, put junior/senior year with the most likely term
-	//1 or 2 put in fresh/soph
-	let colToAttachTo = null;
-	let level = searcher.value.split(' ')[1]
-	if (level >= 3000){
-		colToAttachTo = document.getElementById('JuniorAcolContent');
-	} else {
-		colToAttachTo = document.getElementById('FreshmanAcolContent');
-	}
-	console.log(colToAttachTo);
-	
-	let item = document.createElement("div");
-	item.classList.add("board-item", "muuri-item", "muuri-item-shown");
-	item.setAttribute("style", 'left: 0px; top: 0px; transform: translateX(0px) translateY(0px); display: block; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);')
-	
-	let course = document.createElement("div");
-	course.classList.add("board-item-content");
-	course.setAttribute("style", "opacity: 1; transform: scale(1);")
-	course.innerHTML = document.getElementById('courseSearcher').value;
-	item.appendChild(course);
-	colToAttachTo.appendChild(item);
-	//console.log(boardGrid);
-	//boardGrid.add([item]);
-	initMuuri();
-	//check if this or next has a problem with overloads
-}
-	
-	
-async function initAutoComplete(){
 
-	let response = await fetch('data/allCourses.json');
-	courses = null;
-	if (response.ok){
-		courses = await response.json();
-	} else {
-		alert('Failed to get course data');
-	}
-	courses = JSON.parse(courses);
-	let courseList = []
-	let courseKeys = Object.keys(courses);
-	var key;
-	for (key in courses){
-		let thisCourseJSON = JSON.parse(courses[key]);
-		let abbr = thisCourseJSON['abbreviation'];
-		let lvl = thisCourseJSON['level'];
-		let title = thisCourseJSON['title'];
-		courseList.push(abbr + ' ' + lvl.toString() + ' ' + title);
-	}
-	
-	new autoComplete({
-	selector: '#courseSearcher',
-	minChars: 2,
-	source: function(term, suggest){
-		term = term.toLowerCase();
-		var choices = courseList;
-		var matches = [];
-		for (let i=0; i<choices.length; i++)
-			if (~choices[i].toLowerCase().indexOf(term)) matches.push(choices[i]);
-		suggest(matches);
-	}
-});
-}
 
 function initMuuri(){
 	console.log('init murri called');
@@ -196,13 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	})();
 	
-	let button = document.getElementById('entryButton');
-	button.onclick = addCourse;
-	let endingYear = 2022;
-	let yearArray = ['Freshman', 'Sophmore', 'Junior', 'Senior'];
-	let termArray = ['A', 'B', 'C', 'D'];
-	genYears(boardGrid.getInstance(),yearArray, termArray);		
-	initAutoComplete();
+
+
+
 	//initMuuri(boardGrid);
 	
 	

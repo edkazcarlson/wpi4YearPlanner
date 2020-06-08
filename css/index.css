@@ -15,6 +15,23 @@
 	
 }
 
+.yearWrapper{
+	display: flex;
+	padding: 10px;
+}
+
+.header {
+	padding: 10px;
+}
+
+.course {
+	padding: 10px;
+}
+
+.body{
+	height: 150px;
+}
+
 .boardSection{
 	margin-right: 150px;
 }
