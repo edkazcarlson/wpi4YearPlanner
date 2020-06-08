@@ -67,35 +67,55 @@ async function initAutoComplete(){
 			if (~choices[i].toLowerCase().indexOf(term)) matches.push(choices[i]);
 		suggest(matches);
 	}
-});
+	});
+	return courses;
 }
 
 
-function addCourse(){
-	//let boardGrid = initBoardGrid();
+function addCourse(coursesJson){
+
 	console.log('add course called');
+	let possibleStarts = ['FreshmanAbody', 'SophmoreAbody', 'JuniorAbody', 'SeniorAbody'];
+
 	let searcher = document.getElementById('courseSearcher');
 	//if level is 3 or 4, put junior/senior year with the most likely term
 	//1 or 2 put in fresh/soph
 	let colToAttachTo = null;
 	let level = searcher.value.split(' ')[1]
-	if (level >= 3000){
-		colToAttachTo = document.getElementById('JuniorAbody');
+	let courseYearIndex = null;
+	if (level >= 3000 || level < 600){
+		courseYearIndex = 2;
 	} else {
-		colToAttachTo = document.getElementById('FreshmanAbody');
+		courseYearIndex = 0;
 	}
-	console.log(colToAttachTo);
 
 	let course = document.createElement("div");
 	course.classList.add("course");
-	course.innerHTML = searcher.value;
 	let splitCourse = searcher.value.split(' ');
 	let courseName = splitCourse[0] + splitCourse[1] + '\n';
 	for (let i = 2; i < splitCourse.length ; i++){
-		courseName += splitCourse[i];
+		courseName += splitCourse[i] + ' ';
 	}
 	course.innerText = courseName;
-	colToAttachTo.appendChild(course);
+	try {
+		let thisCourseJSON = JSON.parse(coursesJson[splitCourse[0] + splitCourse[1] + '.json']);
+		console.log(thisCourseJSON);
+		if (!thisCourseJSON['cat1Status']){ //if cat 2
+			let startYear = thisCourseJSON['startYear'];
+			let startEven = startYear % 2 == 0;
+			let gradYear = document.getElementById('gradYear').value == 'True';
+			let happensOnSenior = gradYear != startEven;
+			if (happensOnSenior){
+				courseYearIndex++;
+			}
+			console.log(happensOnSenior);
+		}
+		colToAttachTo = document.getElementById(possibleStarts[courseYearIndex]);
+		colToAttachTo.appendChild(course);
+	} catch (error){
+		alert("No course with this name exists");
+	}
+	
 }
 	
 	
@@ -107,11 +127,12 @@ function myLoad(){
 	let grid = document.getElementById('board');
 	let idList = genYears(grid,yearArray, termArray);		
 	let button = document.getElementById('entryButton');
-	button.onclick = addCourse;
-	
-	
-	initAutoComplete();
 	dragula(idList);
+	
+	initAutoComplete().then(function(results){
+		button.onclick = function(){addCourse(results);};
+	})
+	
 }
 
 window.onload = myLoad
