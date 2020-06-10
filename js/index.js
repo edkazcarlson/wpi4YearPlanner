@@ -23,13 +23,66 @@ class courseList{
 		return [firstIndex, secondIndex];
 	}
 	
-	
+	jsonOfCourse(dept, level){
+		return JSON.parse(this.courseJson[dept + level + '.json']);
+	}
 	
 	//positions are body ids for course holders in format <year>-<term>-body
-	addCourse(course, position){
-		this.creditGrid[position[0]][position[1]]+= 1;
-		this.validateCredit();
+	addCourse(){
+		//HTML component
+		console.log('add course called');
+		let possibleStarts = ['Freshman-A-body', 'Sophmore-A-body', 'Junior-A-body', 'Senior-A-body'];
+
+		let searcher = document.getElementById('courseSearcher');
+		//if level is 3 or 4, put junior/senior year with the most likely term
+		//1 or 2 put in fresh/soph
+		let colToAttachTo = null;
+		let level = searcher.value.split(' ')[1]
+		let courseYearIndex = null;
+		if (level >= 3000 || level < 600){
+			courseYearIndex = 2;
+		} else {
+			courseYearIndex = 0;
+		}
+
+		let course = document.createElement("div");
+		course.classList.add("course");
+		let splitCourse = searcher.value.split(' ');
+		let courseName = splitCourse[0] + splitCourse[1] + '\n';
+		for (let i = 2; i < splitCourse.length ; i++){
+			courseName += splitCourse[i] + ' ';
+		}
+		course.innerText = courseName;
+		course.id = splitCourse[0] + ' ' + splitCourse[1] 
+		let toCont = false;
+		try {
+			let thisCourseJSON = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
+			console.log(thisCourseJSON);
+			if (!thisCourseJSON['cat1Status']){ //if cat 2
+				let startYear = thisCourseJSON['startYear'];
+				let startEven = startYear % 2 == 0;
+				let gradYear = document.getElementById('gradYear').value == 'True';
+				let happensOnSenior = gradYear != startEven;
+				if (happensOnSenior){
+					courseYearIndex++;
+				}
+				console.log(happensOnSenior);
+			}
+			colToAttachTo = document.getElementById(possibleStarts[courseYearIndex]);
+			colToAttachTo.appendChild(course);
+			toCont = true;
+		} catch (error){
+			console.log(error);
+			alert("No course with this name exists");
+		}
+		if (toCont){
+			this.creditGrid[courseYearIndex][0]+= 1;
+			this.validateCredit([courseYearIndex, 0],colToAttachTo.id );
+		}
+
 	}
+	
+	
 	
 	removeCourse(courseName){
 		
@@ -53,19 +106,27 @@ class courseList{
 	}
 	
 	validateCourse(courseName, location){
-		
+		let splitCourse = courseName.split(' ');
+		console.log(splitCourse);
+		let curCourseJson = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
+		console.log(curCourseJson);
+		let reqs = curCourseJson['req'];
+		console.log(this.courseGrid);
+		reqs.forEach(req => {
+			let reqName = req[0] + ' ' + req[1];
+			//scan the rest/ earlier courses in the courseGrid for reqName, if any fail to find, put a warning in the warnDiv
+		});
 	}
 	
+	//indices is an array of [credit grid year, credit grid semester]
+	//positionID is the id of the body that the course changed into
 	validateCredit(indices, positionID){
-		console.log('validateCredit');
-		console.log(indices);
-		console.log(positionID);
 		//Go through all existing credit warnings and see if the are still valid
 		
 		//add new credit warnings
 		if (this.creditGrid[indices[0]][indices[1]] > 7){
 			console.log('too many courses in a semeseter');
-			let splitPosId = positionID.split('-')
+			let splitPosId = positionID.split('-');
 			let warnings = document.getElementById("Warnings");
 			let warnDiv = document.createElement("div");
 			warnDiv.id = indices[0] + '-' + indices[1] + '-Warning';
@@ -159,52 +220,6 @@ async function initAutoComplete(){
 	return courses;
 }
 
-
-function addCourse(coursesJson){
-
-	console.log('add course called');
-	let possibleStarts = ['Freshman-A-body', 'Sophmore-A-body', 'Junior-A-body', 'Senior-A-body'];
-
-	let searcher = document.getElementById('courseSearcher');
-	//if level is 3 or 4, put junior/senior year with the most likely term
-	//1 or 2 put in fresh/soph
-	let colToAttachTo = null;
-	let level = searcher.value.split(' ')[1]
-	let courseYearIndex = null;
-	if (level >= 3000 || level < 600){
-		courseYearIndex = 2;
-	} else {
-		courseYearIndex = 0;
-	}
-
-	let course = document.createElement("div");
-	course.classList.add("course");
-	let splitCourse = searcher.value.split(' ');
-	let courseName = splitCourse[0] + splitCourse[1] + '\n';
-	for (let i = 2; i < splitCourse.length ; i++){
-		courseName += splitCourse[i] + ' ';
-	}
-	course.innerText = courseName;
-	try {
-		let thisCourseJSON = JSON.parse(coursesJson[splitCourse[0] + splitCourse[1] + '.json']);
-		console.log(thisCourseJSON);
-		if (!thisCourseJSON['cat1Status']){ //if cat 2
-			let startYear = thisCourseJSON['startYear'];
-			let startEven = startYear % 2 == 0;
-			let gradYear = document.getElementById('gradYear').value == 'True';
-			let happensOnSenior = gradYear != startEven;
-			if (happensOnSenior){
-				courseYearIndex++;
-			}
-			console.log(happensOnSenior);
-		}
-		colToAttachTo = document.getElementById(possibleStarts[courseYearIndex]);
-		colToAttachTo.appendChild(course);
-	} catch (error){
-		console.log(error);
-		alert("No course with this name exists");
-	}
-}
 	
 function deleteCourse(){
 	
@@ -219,13 +234,13 @@ function myLoad(){
 	let button = document.getElementById('entryButton');
 	let listManager = new courseList(idList);
 	dragula(idList).on('drop', function(e1, target, source){
-		listManager.changeCourse(e1.innerText, target.id, source.id);
+		listManager.changeCourse(e1.id, target.id, source.id);
 	});
 	
 	initAutoComplete().then(function(results){
+		listManager.loadCourseJson(results);
 		button.onclick = function(){
-			addCourse(results);
-			listManager.loadCourseJson(results);};
+			listManager.addCourse(results);};
 	})
 }
 
