@@ -15,7 +15,8 @@ class courseList{
 		}
 	}
 	
-	
+	//positions are in format <year>-<term>-body, returns the respective index for the courseGrid
+	//ex: Sophmore-B-body would return [1,1]
 	posNameToIndex(posName){
 		const splitName = posName.split('-');
 		const firstIndex = yearArray.indexOf(splitName[0]);
@@ -23,6 +24,7 @@ class courseList{
 		return [firstIndex, secondIndex];
 	}
 	
+	//grabs the json specific to this course
 	jsonOfCourse(dept, level){
 		return JSON.parse(this.courseJson[dept + level + '.json']);
 	}
@@ -52,10 +54,21 @@ class courseList{
 		for (let i = 2; i < splitCourse.length ; i++){
 			courseName += splitCourse[i] + ' ';
 		}
-		course.innerText = courseName;
+		course.innerText = courseName + '\n';
 		course.id = splitCourse[0] + ' ' + splitCourse[1] 
+		
+		let deleteButton = document.createElement("button");
+		let thisCourseList = this;
+		deleteButton.onclick = function(){
+			thisCourseList.removeCourse(this, courseName);			
+		}
+		deleteButton.classList.add("deleteButton");
+		deleteButton.innerText = 'Delete';
+		course.appendChild(deleteButton);
+		
+		
 		let toCont = false;
-		try {
+		try { 
 			let thisCourseJSON = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
 			console.log(thisCourseJSON);
 			if (!thisCourseJSON['cat1Status']){ //if cat 2
@@ -84,8 +97,8 @@ class courseList{
 	
 	
 	
-	removeCourse(courseName){
-		
+	removeCourse(delButton, courseName){
+		console.log(courseName);
 	}
 	
 	//positions are body ids for course holders in format <year>-<term>-body
@@ -142,6 +155,7 @@ class courseList{
 		}
 	}
 	
+	//add the json for the courses to this object
 	loadCourseJson(json){
 		this.courseJson = json;
 	}
