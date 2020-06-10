@@ -1,3 +1,91 @@
+let yearArray = ['Freshman', 'Sophmore', 'Junior', 'Senior'];
+let termArray = ['A', 'B', 'C', 'D'];
+class courseList{
+	constructor(grid){
+		this.htmlGrid = grid;
+		this.creditGrid = [[0,0],[0,0],[0,0],[0,0]];
+		console.log(this.creditGrid);
+		this.courseGrid = [];
+		for (let i = 0 ; i < 4 ; i++){
+			let yearArray = []
+			for (let j = 0; j < 4 ; j++){
+				yearArray.push(new Set());
+			}
+			this.courseGrid.push(yearArray);
+		}
+	}
+	
+	
+	posNameToIndex(posName){
+		const splitName = posName.split('-');
+		const firstIndex = yearArray.indexOf(splitName[0]);
+		const secondIndex = termArray.indexOf(splitName[1]);
+		return [firstIndex, secondIndex];
+	}
+	
+	
+	
+	//positions are body ids for course holders in format <year>-<term>-body
+	addCourse(course, position){
+		this.creditGrid[position[0]][position[1]]+= 1;
+		this.validateCredit();
+	}
+	
+	removeCourse(courseName){
+		
+	}
+	
+	//positions are body ids for course holders in format <year>-<term>-body
+	changeCourse(courseName, oldPosition, newPosition){
+		//course change
+		let newIndices = this.posNameToIndex(newPosition);
+		let oldIndices = this.posNameToIndex(oldPosition);
+		this.courseGrid[newIndices[0]][newIndices[1]].add(courseName);
+		this.courseGrid[oldIndices[0]][oldIndices[1]].delete(courseName);
+		this.validateCourse(courseName, newIndices);
+		
+		//credit change
+		oldIndices[1] /= 2;	
+		newIndices[1] /= 2;
+		this.creditGrid[newIndices[0]][newIndices[1]] += 1;
+		this.creditGrid[oldIndices[0]][oldIndices[1]] -= 1;
+		this.validateCredit(newIndices, newPosition);
+	}
+	
+	validateCourse(courseName, location){
+		
+	}
+	
+	validateCredit(indices, positionID){
+		console.log('validateCredit');
+		console.log(indices);
+		console.log(positionID);
+		//Go through all existing credit warnings and see if the are still valid
+		
+		//add new credit warnings
+		if (this.creditGrid[indices[0]][indices[1]] > 7){
+			console.log('too many courses in a semeseter');
+			let splitPosId = positionID.split('-')
+			let warnings = document.getElementById("Warnings");
+			let warnDiv = document.createElement("div");
+			warnDiv.id = indices[0] + '-' + indices[1] + '-Warning';
+			warnDiv.classList.add("warning");
+			let semName = null;
+			if (splitPosId[1] == 'A' || splitPosId[1] == 'B'){
+				semName = 'A-B';
+			} else {
+				semName = 'C-D';
+			}
+			warnDiv.innerText = 'Too many courses for ' + splitPosId[0] + ' ' + semName;
+			warnings.appendChild(warnDiv);
+		}
+	}
+	
+	loadCourseJson(json){
+		this.courseJson = json;
+	}
+}
+
 function genYears(grid,yearArray, termArray){
 	let idList = [];
 	yearArray.forEach(year => {
@@ -17,7 +105,7 @@ function genYears(grid,yearArray, termArray){
 			
 			let body = document.createElement("div");
 			body.classList.add("body");
-			body.id = year + term + 'body';
+			body.id = year + "-" + term + "-" + 'body';
 			
 			col.appendChild(header);
 			col.appendChild(body);
@@ -75,7 +163,7 @@ async function initAutoComplete(){
 function addCourse(coursesJson){
 
 	console.log('add course called');
-	let possibleStarts = ['FreshmanAbody', 'SophmoreAbody', 'JuniorAbody', 'SeniorAbody'];
+	let possibleStarts = ['Freshman-A-body', 'Sophmore-A-body', 'Junior-A-body', 'Senior-A-body'];
 
 	let searcher = document.getElementById('courseSearcher');
 	//if level is 3 or 4, put junior/senior year with the most likely term
@@ -113,26 +201,32 @@ function addCourse(coursesJson){
 		colToAttachTo = document.getElementById(possibleStarts[courseYearIndex]);
 		colToAttachTo.appendChild(course);
 	} catch (error){
+		console.log(error);
 		alert("No course with this name exists");
 	}
-	
 }
 	
+function deleteCourse(){
+	
+}
 	
 
 function myLoad(){
 	let endingYear = 2022;
-	let yearArray = ['Freshman', 'Sophmore', 'Junior', 'Senior'];
-	let termArray = ['A', 'B', 'C', 'D'];
+
 	let grid = document.getElementById('board');
 	let idList = genYears(grid,yearArray, termArray);		
 	let button = document.getElementById('entryButton');
-	dragula(idList);
+	let listManager = new courseList(idList);
+	dragula(idList).on('drop', function(e1, target, source){
+		listManager.changeCourse(e1.innerText, target.id, source.id);
+	});
 	
 	initAutoComplete().then(function(results){
-		button.onclick = function(){addCourse(results);};
+		button.onclick = function(){
+			addCourse(results);
+			listManager.loadCourseJson(results);};
 	})
-	
 }
 
 window.onload = myLoad

@@ -35,3 +35,7 @@
 .boardSection{
 	margin-right: 150px;
 }
+
+.warning {
+	color: red;
+}
