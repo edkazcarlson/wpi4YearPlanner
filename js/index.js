@@ -83,6 +83,7 @@ class courseList{
 			}
 			colToAttachTo = document.getElementById(possibleStarts[courseYearIndex]);
 			colToAttachTo.appendChild(course);
+			this.courseGrid[courseYearIndex][0].add(splitCourse[0] +  ' ' +  splitCourse[1]);
 			toCont = true;
 		} catch (error){
 			console.log(error);
@@ -91,6 +92,7 @@ class courseList{
 		if (toCont){
 			this.creditGrid[courseYearIndex][0]+= 1;
 			this.validateCredit([courseYearIndex, 0],colToAttachTo.id );
+			this.validateCourse(course.id, colToAttachTo.id);
 		}
 
 	}
@@ -98,7 +100,13 @@ class courseList{
 	
 	
 	removeCourse(delButton, courseName){
-		console.log(courseName);
+		let courseWrapper = delButton.parentElement;
+		let courseHolderBody = courseWrapper.parentElement;
+		let indices = this.posNameToIndex(courseHolderBody.id);
+		this.courseGrid[indices[0]][indices[1]] .delete(courseName);
+		indices[1] = indices[1] / 2;
+		this.creditGrid[indices[0]][indices[1]] += -1;
+		courseWrapper.remove();
 	}
 	
 	//positions are body ids for course holders in format <year>-<term>-body
@@ -119,15 +127,40 @@ class courseList{
 	}
 	
 	validateCourse(courseName, location){
+		//delete earlier course warnings starting with this id 
+		let warnings = document.getElementById("Warnings");
+		console.log(warnings.childNodes);
+		warnings.childNodes.forEach(child => {
+			console.log(child.id);
+		});
+
+		//add new course warnings
 		let splitCourse = courseName.split(' ');
-		console.log(splitCourse);
+		console.log(splitCourse)
 		let curCourseJson = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
 		console.log(curCourseJson);
 		let reqs = curCourseJson['req'];
 		console.log(this.courseGrid);
 		reqs.forEach(req => {
 			let reqName = req[0] + ' ' + req[1];
-			//scan the rest/ earlier courses in the courseGrid for reqName, if any fail to find, put a warning in the warnDiv
+			console.log('reqName=' + reqName);
+			let found = false;
+			this.courseGrid.forEach(year => {
+				year.forEach(term => {
+					if (term.has(reqName)){
+						found = true;
+					}
+				});
+			});
+			if (found == false){
+				console.log('did not find pre req');
+				
+				let warnDiv = document.createElement("div");
+				warnDiv.id = courseName + '-without-' + reqName+ '-req-Warning';
+				warnDiv.innerText = courseName + ' is without recommnded class: ' + reqName;
+				warnDiv.classList.add("warning");
+				warnings.appendChild(warnDiv);
+			}
 		});
 	}
 	
@@ -136,13 +169,15 @@ class courseList{
 	validateCredit(indices, positionID){
 		//Go through all existing credit warnings and see if the are still valid
 		
+		
+		
 		//add new credit warnings
 		if (this.creditGrid[indices[0]][indices[1]] > 7){
 			console.log('too many courses in a semeseter');
 			let splitPosId = positionID.split('-');
 			let warnings = document.getElementById("Warnings");
 			let warnDiv = document.createElement("div");
-			warnDiv.id = indices[0] + '-' + indices[1] + '-Warning';
+			warnDiv.id = indices[0] + '-' + indices[1] + '-Credit-Warning';
 			warnDiv.classList.add("warning");
 			let semName = null;
 			if (splitPosId[1] == 'A' || splitPosId[1] == 'B'){
@@ -248,7 +283,7 @@ function myLoad(){
 	let button = document.getElementById('entryButton');
 	let listManager = new courseList(idList);
 	dragula(idList).on('drop', function(e1, target, source){
-		listManager.changeCourse(e1.id, target.id, source.id);
+		listManager.changeCourse(e1.id, source.id, target.id);
 	});
 	
 	initAutoComplete().then(function(results){
