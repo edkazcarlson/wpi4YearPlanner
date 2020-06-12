@@ -25,8 +25,8 @@ class courseList{
 	}
 	
 	//grabs the json specific to this course
-	jsonOfCourse(dept, level){
-		return JSON.parse(this.courseJson[dept + level + '.json']);
+	jsonOfCourse(courseID){
+		return JSON.parse(this.courseJson[courseID + '.json']);
 	}
 	
 	//positions are body ids for course holders in format <year>-<term>-body
@@ -39,23 +39,17 @@ class courseList{
 		//if level is 3 or 4, put junior/senior year with the most likely term
 		//1 or 2 put in fresh/soph
 		let colToAttachTo = null;
-		let level = searcher.value.split(' ')[1]
-		let courseYearIndex = null;
-		if (level >= 3000 || level < 600){
-			courseYearIndex = 2;
-		} else {
-			courseYearIndex = 0;
-		}
 
 		let course = document.createElement("div");
 		course.classList.add("course");
 		let splitCourse = searcher.value.split(' ');
-		let courseName = splitCourse[0] + splitCourse[1] + '\n';
-		for (let i = 2; i < splitCourse.length ; i++){
+		let courseName = splitCourse[0] + '\n';
+		for (let i = 1; i < splitCourse.length ; i++){
 			courseName += splitCourse[i] + ' ';
 		}
 		course.innerText = courseName + '\n';
-		course.id = splitCourse[0] + ' ' + splitCourse[1] 
+		course.id = splitCourse[0]; 
+		console.log(course.id);
 		
 		let deleteButton = document.createElement("button");
 		let thisCourseList = this;
@@ -65,12 +59,18 @@ class courseList{
 		deleteButton.classList.add("deleteButton");
 		deleteButton.innerText = 'Delete';
 		course.appendChild(deleteButton);
-		
-		
+		let courseYearIndex = null;
 		let toCont = false;
 		try { 
-			let thisCourseJSON = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
+			let thisCourseJSON = this.jsonOfCourse(splitCourse[0]);
 			console.log(thisCourseJSON);
+			let level = thisCourseJSON.level;
+			
+			if (level >= 3000 || level < 600){
+				courseYearIndex = 2;
+			} else {
+				courseYearIndex = 0;
+			}
 			if (!thisCourseJSON['cat1Status']){ //if cat 2
 				let startYear = thisCourseJSON['startYear'];
 				let startEven = startYear % 2 == 0;
@@ -83,7 +83,7 @@ class courseList{
 			}
 			colToAttachTo = document.getElementById(possibleStarts[courseYearIndex]);
 			colToAttachTo.appendChild(course);
-			this.courseGrid[courseYearIndex][0].add(splitCourse[0] +  ' ' +  splitCourse[1]);
+			this.courseGrid[courseYearIndex][0].add(course.id);
 			toCont = true;
 		} catch (error){
 			console.log(error);
@@ -126,14 +126,23 @@ class courseList{
 		this.validateCredit(newIndices, newPosition);
 	}
 	
+	//coursename is in format deptlevel
+	//location is the id of the body the course was changed or added into
 	validateCourse(courseName, location){
 		//delete earlier course warnings starting with this id 
 		let warnings = document.getElementById("Warnings");
 		console.log(warnings.childNodes);
+		let warningsToRemove = [];
 		warnings.childNodes.forEach(child => {
-			console.log(child.id);
+			let courseLackingPreReq = child.id.split('-')[0];
+			if (courseName == courseLackingPreReq){
+				warningsToRemove.push(child.id);
+			}
 		});
-
+		warningsToRemove.forEach(warningID => {
+			warnings.removeChild(document.getElementById(warningID));
+		});
+		
 		//add new course warnings
 		let splitCourse = courseName.split(' ');
 		console.log(splitCourse)
@@ -142,7 +151,7 @@ class courseList{
 		let reqs = curCourseJson['req'];
 		console.log(this.courseGrid);
 		reqs.forEach(req => {
-			let reqName = req[0] + ' ' + req[1];
+			let reqName = req[0] + req[1];
 			console.log('reqName=' + reqName);
 			let found = false;
 			this.courseGrid.forEach(year => {
@@ -251,7 +260,7 @@ async function initAutoComplete(){
 		let abbr = thisCourseJSON['abbreviation'];
 		let lvl = thisCourseJSON['level'];
 		let title = thisCourseJSON['title'];
-		courseList.push(abbr + ' ' + lvl.toString() + ' ' + title);
+		courseList.push(abbr + lvl.toString() + ' ' + title);
 	}
 	
 	new autoComplete({
