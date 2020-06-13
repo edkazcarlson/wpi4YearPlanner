@@ -37,6 +37,7 @@ class courseNode:
 					"req": self.requirements,
 					"cat1Status": self.isCatOne,
 					"startYear": self.startYear}
+		print(toJsonDict)
 		jsonForm = json.dumps(toJsonDict)
 		with open('courseData/' + str(self.deptAbbrev) + str(self.courseLevel) + '.json', 'w') as outfile:
 			json.dump(jsonForm, outfile)

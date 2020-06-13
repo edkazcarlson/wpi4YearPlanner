@@ -26,7 +26,7 @@ class courseList{
 	
 	//grabs the json specific to this course
 	jsonOfCourse(courseID){
-		return JSON.parse(this.courseJson[courseID + '.json']);
+		return this.courseJson[courseID + '.json'];
 	}
 	
 	//positions are body ids for course holders in format <year>-<term>-body
@@ -71,6 +71,7 @@ class courseList{
 			let courseYearIndex = null;
 			let toCont = false;
 			try { 
+				console.log(splitCourse[0])
 				let thisCourseJSON = this.jsonOfCourse(splitCourse[0]);
 				console.log(thisCourseJSON);
 				let level = thisCourseJSON.level;
@@ -100,7 +101,7 @@ class courseList{
 			}
 			if (toCont){
 				this.creditGrid[courseYearIndex][0]+= 1;
-				this.validateCredit([courseYearIndex, 0],colToAttachTo.id,null );
+				this.validateCredit([courseYearIndex, 0],null);
 				this.validateCourse(course.id, colToAttachTo.id);
 			}
 		}else {
@@ -136,7 +137,7 @@ class courseList{
 		newIndices[1] = Math.floor(newIndices[1]/2);
 		this.creditGrid[newIndices[0]][newIndices[1]] += 1;
 		this.creditGrid[oldIndices[0]][oldIndices[1]] -= 1;
-		this.validateCredit(newIndices, newPosition,oldPosition);
+		this.validateCredit(newIndices, oldIndices);
 	}
 	
 	//coursename is in format deptlevel
@@ -177,29 +178,40 @@ class courseList{
 	}
 	
 	//indices is an array of [credit grid year, credit grid semester] of the where the course moved into
-	//positionID is the id of the body that the course changed into
-	validateCredit(indices, newPositionID, oldPositionID){
+	validateCredit(newIndices, oldIndices){
 		let warnings = document.getElementById("CreditWarnings");
-		console.log(warnings.childNodes);	
-		console.log(oldPositionID);
-		console.log(newPositionID);
-		console.log(indices);
-		
+		if (oldIndices != null){
+			let oldHadWarning = false;
+			let oldWarningID = null;
+			warnings.childNodes.forEach(warning =>{
+				let splitWarning = warning.id.split("-");
+				if (splitWarning[0] == oldIndices[0] && splitWarning[1] == oldIndices[1]){
+					oldHadWarning = true;
+					oldWarningID = warning.id;
+				}
+			});
+			if (oldHadWarning){
+				if (this.creditGrid[oldIndices[0]][oldIndices[1]] < 8){
+					warnings.removeChild(document.getElementById(oldWarningID));
+				}
+			}
+		}
 		
 		//add new credit warnings
-		if (this.creditGrid[indices[0]][indices[1]] > 7){
+		if (this.creditGrid[newIndices[0]][newIndices[1]] > 7){
 			console.log('too many courses in a semeseter');
-			let splitPosId = newPositionID.split('-');
+			let newYear = yearArray[newIndices[0]];
+			let newTerm = termArray[newIndices[1]];
 			let warnDiv = document.createElement("div");
-			warnDiv.id = indices[0] + '-' + indices[1] + '-Credit-Warning';
+			warnDiv.id = newIndices[0] + '-' + newIndices[1] + '-Credit-Warning';
 			warnDiv.classList.add("warning");
 			let semName = null;
-			if (splitPosId[1] == 'A' || splitPosId[1] == 'B'){
+			if (newTerm[1] == 'A' || newTerm[1] == 'B'){
 				semName = 'A-B';
 			} else {
 				semName = 'C-D';
 			}
-			warnDiv.innerText = 'Too many courses for ' + splitPosId[0] + ' ' + semName;
+			warnDiv.innerText = 'Too many courses for ' + newYear[0] + ' ' + semName;
 			warnings.appendChild(warnDiv);
 		}
 	}
@@ -227,21 +239,7 @@ class courseList{
 	}
 	
 	
-	removeCreditWarnings(courseID){
-		console.log(courseID);
-		let warnings = document.getElementById("CreditWarnings");
-		console.log(warnings.childNodes);
-		let warningsToRemove = [];
-		warnings.childNodes.forEach(child => {
-			let courseLackingPreReq = child.id.split('-')[0];
-			if (courseID == courseLackingPreReq){
-				warningsToRemove.push(child.id);
-			}
-		});
-		warningsToRemove.forEach(warningID => {
-			warnings.removeChild(document.getElementById(warningID));
-		});
-	}
+
 	
 	
 }
@@ -292,12 +290,12 @@ async function initAutoComplete(){
 	} else {
 		alert('Failed to get course data');
 	}
-	courses = JSON.parse(courses);
+	console.log(courses);
 	let courseList = []
 	let courseKeys = Object.keys(courses);
 	var key;
 	for (key in courses){
-		let thisCourseJSON = JSON.parse(courses[key]);
+		let thisCourseJSON = courses[key];
 		let abbr = thisCourseJSON['abbreviation'];
 		let lvl = thisCourseJSON['level'];
 		let title = thisCourseJSON['title'];
