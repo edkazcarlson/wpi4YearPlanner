@@ -4,9 +4,22 @@
 	z-index: 1;
 	top: 0;
 	right: 0;
-	width: 150px;
-	margin: 20px
+	width: 200px;
+	margin: 20px;
+	overflow-y: auto;
 }
+
+.gradReqs {
+	height: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 200px;
+	width: 200px;
+	margin: 20px;
+	overflow-y: auto;
+}
+
 
 .sidebar input{
 }

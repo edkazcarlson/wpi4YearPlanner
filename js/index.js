@@ -24,6 +24,22 @@ class courseList{
 		return [firstIndex, secondIndex];
 	}
 	
+	getSplitCourseGrid(){
+		let gridToReturn = [];
+		for (let i = 0 ; i < 4 ; i++){
+			for (let j = 0; j < 4 ; j++){
+				let term = this.courseGrid[i][j];
+				let thisMangager = this;
+				term.forEach(function(course){
+					let jsonCourse = thisMangager.jsonOfCourse(course);
+					let splitCourse = [jsonCourse['abbreviation'], jsonCourse['level']];
+					gridToReturn.push(splitCourse);
+				});
+			}
+		}
+		return gridToReturn;
+	}
+
 	//grabs the json specific to this course
 	jsonOfCourse(courseID){
 		return this.courseJson[courseID + '.json'];
@@ -268,11 +284,11 @@ function genYears(grid,yearArray, termArray){
 			col.appendChild(header);
 			col.appendChild(body);
 			
-			let course = document.createElement("div");
-			course.classList.add("course");
-			course.innerHTML = 'SAMPLE';
+			// let course = document.createElement("div");
+			// course.classList.add("course");
+			// course.innerHTML = 'SAMPLE';
 			
-			body.appendChild(course);
+			// body.appendChild(course);
 			yearDiv.appendChild(col);
 			idList.push(body);
 		});
@@ -322,14 +338,14 @@ function deleteCourse(){
 	
 }
 	
-
+let listManager;
 function myLoad(){
 	let endingYear = 2022;
 
 	let grid = document.getElementById('board');
 	let idList = genYears(grid,yearArray, termArray);		
 	let button = document.getElementById('entryButton');
-	let listManager = new courseList(idList);
+	listManager = new courseList(idList);
 	dragula(idList).on('drop', function(e1, target, source){
 		listManager.changeCourse(e1.id, source.id, target.id);
 	});
@@ -338,7 +354,28 @@ function myLoad(){
 		listManager.loadCourseJson(results);
 		button.onclick = function(){
 			listManager.addCourse(results);};
-	})
+	});
+
 }
+
+function checkGradReq(){
+	let major = document.getElementById("major");
+	let majorToReqMap = new Map([['CS', csMajor]]);
+	let majorReq = majorToReqMap.get(major.value);
+	let gradDOM = document.getElementById("gradReqs");
+	let reqArray = majorReq.canGraduate(listManager.getSplitCourseGrid());
+	let reqStr = '';
+	if (reqArray.size == 0){
+		reqStr = 'Can graduate with this set of courses';
+	} else {
+		reqArray.forEach(function(req){
+			reqStr += "⚫" + req + '\n';
+		})
+	}
+	console.log(reqStr);
+	gradDOM.innerText = reqStr;
+}
+
+
 
 window.onload = myLoad

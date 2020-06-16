@@ -1,5 +1,3 @@
-import { relative } from "path";
-
 function filterCourses(courses, allowedDepts){
     let toReturn = []
     courses.forEach(function(course){
@@ -10,22 +8,21 @@ function filterCourses(courses, allowedDepts){
     return toReturn;
 }
 
-class course{
+class courseModel{
     constructor(dept, level){
         this.dept = dept;
-        this.level = level;
+        this.level = parseInt(level);
     }
 }
 
 class gradRule{
     //rule is a function that takes a set of courses
     constructor(rule){
-        this.coursesTowardsThisRule = new Set();
         this.rule = rule;
     }
     //returns an array of messages of what has not been fullfilled, if has been fullfilled, returns an empty array
-    fulfilled(){
-        return rule(this.coursesTowardsThisRule);
+    fulfilled(courses){
+        return this.rule(courses);
     }
 }
 
@@ -73,7 +70,7 @@ let huaReq = new gradRule(function(courses){
         if (key >= 3){
             depthFulfilled = true;
             depth = value;
-            break;
+            //break;
         }
     });
 
@@ -103,6 +100,7 @@ let huaReq = new gradRule(function(courses){
     if (!totalCourseCountFulfilled){
         toReturn.push("Need at least 5 non capstone humanities courses");
     }
+    return toReturn;
 });
 
 let huaCapstoneReq = new gradRule(function(courses){
@@ -157,11 +155,12 @@ let mqpReq = new gradRule(function(courses){
 });
 
 let csMajorCSReq = new gradRule(function(courses){
+    console.log(courses);
+    let toReturn = [];
     let sysBinFulfilled = false;
     let theoryBinFulfilled = false;
     let deisgnBinFulfilled = false;
     let socialBinFulfilled = false;
-    let fiveThirds4000OrHigherFulfilled = false;
     let highLevelCredCount = 0;
     let totalCourseCountFulfilled = false;
     let totalCourses = 0;
@@ -176,12 +175,31 @@ let csMajorCSReq = new gradRule(function(courses){
     let conflictSys = [2301, 2303];
 
     courses.forEach(course => {
+        console.log(course.dept);
+        console.log(course.level);
         if (course.dept == 'CS'){
+            totalCourses++;
             if (conflict1000Level.includes(course.level)){ //if its a course that can have a conflict 
-                //if they haven't taken the course's conflict yet, make it so that they have an add a course to coureses taken
-                //if they have taken the conflicting course, add a warning to the toReturn and do not add a course taken
-
-                
+                if (!accelPair1000Taken){//if they haven't taken the course's conflict yet, make it so that they have an add a course to coureses taken
+                    accelPair1000Taken = true;
+                } else { //if they have taken the conflicting course, add a warning to the toReturn and do not add a course taken
+                    toReturn.push("Taking a conflicting course, cannot take both 1101 and 1102 for credit");
+                    totalCourses--;
+                }
+            } else if (conflictOOLevel.includes(course.level)){
+                if (!accelPairOOTaken){//if they haven't taken the course's conflict yet, make it so that they have an add a course to coureses taken
+                    accelPairOOTaken = true;
+                } else { //if they have taken the conflicting course, add a warning to the toReturn and do not add a course taken
+                    toReturn.push("Taking a conflicting course, cannot take both 2102 or 2103 or 210X for credit");
+                    totalCourses--;
+                }
+            } else if (conflictSys.includes(course.level)){
+                if (!sysPairTaken){//if they haven't taken the course's conflict yet, make it so that they have an add a course to coureses taken
+                sysPairTaken = true;
+                } else { //if they have taken the conflicting course, add a warning to the toReturn and do not add a course taken
+                    toReturn.push("Taking a conflicting course, cannot take both 2301 and 2303 for credit");
+                    totalCourses--;
+                }
             }
 
 
@@ -194,6 +212,8 @@ let csMajorCSReq = new gradRule(function(courses){
                 theoryBinFulfilled = true;
             } else if (designBinCoures.includes(course.level)){
                 theoryBinFulfilled = true;
+            } else if (course.level == 3043){
+                socialBinFulfilled = true;
             }
         } else {
             switch(course.dept){
@@ -221,22 +241,115 @@ let csMajorCSReq = new gradRule(function(courses){
         }
 
     });
+    
+    if(!sysBinFulfilled){
+        toReturn.push("Need at least 1 course from the systems bin (3013, 4513, 4515, 4516)");
+    }
+    if (!theoryBinFulfilled){
+        toReturn.push("Need at least 1 course from the theory bin (3133, 4120, 4123, 4536)")
+    }
+    if (!deisgnBinFulfilled){
+        toReturn.push("Need at least 1 course from the design bin (3041, 3431, 3733, 4233)")
+    }
+    if (!socialBinFulfilled){
+        toReturn.push("Need at least 1 course from the ethics bin (CS 3043, GOV 2314, GOV 2315, ID 2314, STS 2208, IMGD 2000, IMGD 2001)")
+    }
+    if (highLevelCredCount < 5){
+        toReturn.push("Need at least 5, 4000 level or higher courses");
+    }
+    if (totalCourses < 15){
+        toReturn.push("Need at least 15 non-MQP cs courses");
+    }
+    return toReturn;
 });
 
 let csMajorMathReq = new gradRule(function(courses){
-
+    courses = filterCourses(courses, ['MA']);
+    let probFulfilled = false;
+    let statsFulfilled = false;
+    let atMostFour1000 = false;
+    let creditFullfilled = false;
+    let creditsCounted = 0;
+    let thousandLevelCoursesTaken = 0;
+    courses.forEach(function(course){
+        if (course.level < 2000){
+            thousandLevelCoursesTaken++;
+            if (thousandLevelCoursesTaken <= 4){
+                creditsCounted++;
+            }
+        } else {
+            creditsCounted++;
+            if (course.level == 2631 || course.level == 2621){
+                probFulfilled = true;
+            } else if (course.level == 2611 || course.level == 2612){
+                statsFulfilled = true;
+            }
+        }
+    });
+    let toReturn = [];
+    if (!probFulfilled){
+        toReturn.push('Need to take a probability class, MA 2631 or 2631');
+    }
+    if (!statsFulfilled){
+        toReturn.push('Need to take a statistics class, MA 2611 or MA 2612');
+    }
+    if (creditsCounted < 7){
+        toReturn.push('Need at least 7 math courses');
+    }
+    return toReturn;
 });
 
 let csMajorSciEngReq = new gradRule(function(courses){
+    courses = filterCourses(courses, ['BB', 'BME', 'CE', 'CH', 'CHE', 'ECE', 'ES', 'GE', 'ME', 'PH', 'RBE']);
+    let hardSciTaken = new Map([['BB', 0], ['CH',0], ['GE',0], ['PH',0]]);
+    let hardSci = ['BB', 'CH', 'GE', 'PH'];
+    let coursesTaken = courses.size;
+    let atLeastTwoTaken = false;
+    courses.forEach(function(course){
+        if (hardSci.includes(course.dept)){
+            hardSciTaken++;
+            hardSciTaken[course.dept] = hardSciTaken[course.dept] + 1;
+        }
+    });
+    hardSciTaken.forEach(function(val,key,map){
+        if (key >= 2){
+            atLeastTwoTaken = true;
+        }
+    });
 
+    let toReturn = [];
+    if (coursesTaken < 5){
+        toReturn.push('Need at least 5 Science or Engineering classes');
+    }
+    if (!atLeastTwoTaken){
+        toReturn.push('Need to take at least two courses in the same hard science discipline (BB, CH, GE, PH)');    
+    }
+    if (hardSciTaken < 3){
+        toReturn.push('Need to take at least two hard science courses.');
+    }
+    return toReturn;
 });
 
 class majorGradReq{
     constructor(){
-        this.reqs = [];
+        this.reqs = [huaReq, huaCapstoneReq, ssReq, iqpReq, mqpReq];
     }
-    addReq(){
-
+    addReqs(specificReq){
+        this.reqs = this.reqs.concat(specificReq);
+    }
+    canGraduate(courses){
+        let courseObjSet = new Set();
+        courses.forEach(function(course){
+            courseObjSet.add(new courseModel(course[0], course[1]));
+        });
+        let changesNeeded = [];
+        this.reqs.forEach(function(req){
+            changesNeeded = changesNeeded.concat(req.fulfilled(courseObjSet));
+        });
+        return changesNeeded;
     }
 }
+
+var csMajor = new majorGradReq();
+csMajor.addReqs([csMajorCSReq, csMajorMathReq, csMajorSciEngReq]);
 
