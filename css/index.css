@@ -4,7 +4,7 @@
 	z-index: 1;
 	top: 0;
 	right: 0;
-	width: 200px;
+	width: 300px;
 	margin: 20px;
 	overflow-y: auto;
 }
@@ -14,7 +14,7 @@
 	position: fixed;
 	z-index: 1;
 	top: 0;
-	right: 200px;
+	right: 300px;
 	width: 200px;
 	margin: 20px;
 	overflow-y: auto;
@@ -39,6 +39,7 @@
 
 .course {
 	padding: 10px;
+	border-style: groove;
 }
 
 .body{
