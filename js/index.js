@@ -144,13 +144,13 @@ class courseList{
 	changeCourse(courseName, oldPosition, newPosition){
 		function removeFromOld(courseGrid, creditGrid, oldIndices, courseName){
 			courseGrid[oldIndices[0]][oldIndices[1]].delete(courseName);
-			oldIndices[1] = Math.floor(oldIndices[1]/2);	
-			creditGrid[oldIndices[0]][oldIndices[1]] -= 1;
+			let term = Math.floor(oldIndices[1]/2);	
+			creditGrid[oldIndices[0]][term] -= 1;
 		}
 		function addToNew(courseGrid, creditGrid, newIndices, courseName){
 			courseGrid[newIndices[0]][newIndices[1]].add(courseName);
-			newIndices[1] = Math.floor(newIndices[1]/2);
-			creditGrid[newIndices[0]][newIndices[1]] += 1;
+			let term = Math.floor(newIndices[1]/2);
+			creditGrid[newIndices[0]][term] += 1;
 		}
 		let newIndices = this.posNameToIndex(newPosition);
 		let oldIndices = this.posNameToIndex(oldPosition);
@@ -159,8 +159,8 @@ class courseList{
 		if (newPosition == 'outOfWPIBody'){
 			console.log("went to out of wpi body")
 			removeFromOld(this.courseGrid, this.creditGrid, oldIndices, courseName);
-			this.removeCourseWarningsEndingWith(courseName);
-			this.removeCourseWarningsStartingWith(courseName);
+			this.removeCourseWarningsEndingWith(courseName, oldIndices);
+			this.removeCourseWarningsStartingWith(courseName, oldIndices);
 		} else if (oldPosition == 'outOfWPIBody'){
 			addToNew(this.courseGrid, this.creditGrid, newIndices, courseName)
 			this.validateCourse(courseName, newIndices);
@@ -175,7 +175,7 @@ class courseList{
 	}
 	
 	removeCourseWarningsEndingWith(courseName, locIndices){
-		console.log(locIndices)
+		console.log("locIndices: " + locIndices)
 		let warnings = document.getElementById("CourseWarnings");
 		let toDelete = [];
 		warnings.childNodes.forEach(warning => {
@@ -218,7 +218,7 @@ class courseList{
 	//coursename is in format deptlevel
 	//location is the id of the body the course was changed or added into
 	validateCourse(courseName, locIndices){
-		console.log(location);
+		console.log(locIndices);
 		let splitCourse = courseName.split(' ');
 		//delete earlier course warnings starting with this id 
 		let warnings = document.getElementById("CourseWarnings");
@@ -405,10 +405,7 @@ async function initAutoComplete(){
 	return courses;
 }
 
-	
-function deleteCourse(){
-	
-}
+
 	
 let listManager;
 function myLoad(){
