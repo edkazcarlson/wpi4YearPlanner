@@ -39,6 +39,7 @@ fileList = os.listdir('courseData')
 masterDict = {}
 for file in fileList:
 	with open ('courseData' + '/' + file) as jsonFile:
-		masterDict[file] = json.loads(json.load(jsonFile))
+		myDict = json.load(jsonFile)
+		masterDict[file] = myDict
 with open('allCourses.json', 'w') as outfile:
 	json.dump(masterDict, outfile)

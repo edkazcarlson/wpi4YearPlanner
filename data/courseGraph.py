@@ -10,12 +10,13 @@ class courseNode:
 		reqToReturn = []
 		cat = True
 		startYear = -1
-		if len(splitDesc) > 1: #are pre-reqs
-			preReqs = re.findall('[A-Z]{2,4}\s*[0-9]{3}[X][^-]|[A-Z]{2,4}\s*[0-9]{4}[^-]|[A-Z]{2,4}\s*[0-9]{3}[^-]|[A-Z]{2,4}\s*[0-9]{2}[X][^-]',splitDesc[1])
-			for req in preReqs:
-				dept = re.findall('[a-zA-Z]{2,4}', req)
-				level = re.findall('[0-9]{3}[X]|[0-9]{4}', req)
-				reqToReturn.append((dept,level))
+		if len(splitDesc) > 1: 
+			if splitDesc[1].find("none") != 0 and splitDesc[1].find("none") != 1: #are pre-reqs
+				preReqs = re.findall('[A-Z]{2,4}\s*[0-9]{3}[X][^-]|[A-Z]{2,4}\s*[0-9]{4}[^-]|[A-Z]{2,4}\s*[0-9]{3}[^-]|[A-Z]{2,4}\s*[0-9]{2}[X][^-]',splitDesc[1])
+				for req in preReqs:
+					dept = re.findall('[a-zA-Z]{2,4}', req)
+					level = re.findall('[0-9]{3}[X]|[0-9]{4}', req)
+					reqToReturn.append((dept,level))
 		catRE = re.findall('Cat.*\s*[I]+\s', splitDesc[0])
 		if len(catRE) > 0: #if cat is specified
 			cat =  len(re.findall('I',catRE[0])) == 1
@@ -30,16 +31,16 @@ class courseNode:
 		self.courseTitle, self.courseLevel, self.deptAbbrev,  self.description = courseTitle, courseLevel, deptAbbrev, description
 		self.requirements, self.isCatOne, self.startYear = self.parseDesc(description)
 	def toJson(self):
-		toJsonDict = {"title": self.courseTitle,
-					"level": self.courseLevel,
-					"abbreviation": self.deptAbbrev,
-					"description": self.description,
-					"req": self.requirements,
-					"cat1Status": self.isCatOne,
-					"startYear": self.startYear}
-		print(toJsonDict)
-		jsonForm = json.dumps(toJsonDict)
+		toJsonDict = {'title': self.courseTitle,
+					'level': self.courseLevel,
+					'abbreviation': self.deptAbbrev,
+					'description': self.description,
+					'req': self.requirements,
+					'cat1Status': self.isCatOne,
+					'startYear': self.startYear}
 		with open('courseData/' + str(self.deptAbbrev) + str(self.courseLevel) + '.json', 'w') as outfile:
-			json.dump(jsonForm, outfile)
+			json.dump(toJsonDict, outfile)
 	
-#c = courseNode(1, 1, 1, 'Cat. II Algorithms and programming techniques from artificial intelligence (AI) are key contributors to the experience of modern computer games and interactive media, either by directly controlling a non-player character (NPC) or through more subtle manipulation of the environment. This course will focus on the practical AI programming techniques currently used in computer games for NPC navigation and decision-making, along with the design issues that arise when AI is applied in computer games, such as believability and real-time performance. The course will also briefly discuss future directions in applying AI to games and media. Students will be expected to complete significant software development projects using the studied techniques. Recommended background: object-oriented design concepts (CS 2102), algorithms (CS 2223), and knowledge of technical game development (IMGD 3000). This course will be offered in 2016-17, and in alternating years thereafter.')
+# c = courseNode('INTRODUCTION TO PROGRAM DESIGN', 1101, 'CS', 
+# 'This course introduces principles of computation and programming with an emphasis on program design. Topics include the design, implementation and testing of programs that use a variety of data structures (such as structures, lists, and trees), functions, conditionals, recursion and higher-­‐order functions. Students will be expected to design simple data models, and implement and debug programs in a functional programming language. Recommended background: none. Either CS 1101 or CS 1102 provides sufficient background for further courses in the CS department. Undergraduate credit may not be earned for both this course and CS 1102.')
+# c.toJson()

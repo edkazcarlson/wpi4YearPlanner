@@ -442,6 +442,7 @@ async function initAutoComplete(){
 	let courseList = []
 	let courseKeys = Object.keys(courses);
 	var key;
+	console.log(typeof(courses))
 	for (key in courses){
 		let thisCourseJSON = courses[key];
 		let abbr = thisCourseJSON['abbreviation'];
