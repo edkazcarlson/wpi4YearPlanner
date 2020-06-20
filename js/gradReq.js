@@ -177,7 +177,10 @@ let csMajorCSReq = new gradRule(function(courses){
     courses.forEach(course => {
         console.log(course.dept);
         console.log(course.level);
+        console.log(typeof(course.level));
+        console.log(typeof(designBinCoures[0]));
         if (course.dept == 'CS'){
+            console.log("Is a cs course");
             totalCourses++;
             if (conflict1000Level.includes(course.level)){ //if its a course that can have a conflict 
                 if (!accelPair1000Taken){//if they haven't taken the course's conflict yet, make it so that they have an add a course to coureses taken
@@ -211,7 +214,7 @@ let csMajorCSReq = new gradRule(function(courses){
             } else if (theoryBinCoures.includes(course.level)){ 
                 theoryBinFulfilled = true;
             } else if (designBinCoures.includes(course.level)){
-                theoryBinFulfilled = true;
+                deisgnBinFulfilled = true;
             } else if (course.level == 3043){
                 socialBinFulfilled = true;
             }

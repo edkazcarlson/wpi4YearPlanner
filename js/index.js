@@ -1,7 +1,8 @@
 let yearArray = ['Freshman', 'Sophmore', 'Junior', 'Senior'];
 let termArray = ['A', 'B', 'C', 'D'];
-class courseList{
-	constructor(grid){
+class courseManager{
+	constructor(grid, warningManager){
+		this.WarningManager = warningManager;
 		this.htmlGrid = grid;
 		this.creditGrid = [[0,0],[0,0],[0,0],[0,0]];
 		this.courseGrid = [];
@@ -15,10 +16,23 @@ class courseList{
 		}
 	}
 	
+
+	courseNameToIndices(courseName){
+		let indices = [];
+		for (let i = 0 ; i < 4 ; i++){
+			for (let j = 0; j < 4 ; j++){
+				if (this.courseGrid[i][j].has(courseName)){
+					indices = [i,j];
+					break;
+				}
+			}
+		}
+		return indices;
+	}
+
 	//positions are in format <year>-<term>-body, returns the respective index for the courseGrid
 	//ex: Sophmore-B-body would return [1,1]
 	posNameToIndex(posName){
-		console.log(posName);
 		const splitName = posName.split('-');
 		const firstIndex = yearArray.indexOf(splitName[0]);
 		const secondIndex = termArray.indexOf(splitName[1]);
@@ -39,7 +53,7 @@ class courseList{
 				});
 			}
 		}
-		tihs.outOfWPICourses.forEach(function(course){
+		this.outOfWPICourses.forEach(function(course){
 			let jsonCourse = thisMangager.jsonOfCourse(course);
 			let splitCourse = [jsonCourse['abbreviation'], jsonCourse['level']];
 			gridToReturn.push(splitCourse);
@@ -120,7 +134,7 @@ class courseList{
 			if (toCont){
 				this.creditGrid[courseYearIndex][0]+= 1;
 				this.validateCredit([courseYearIndex, 0],null);
-				this.validateCourse(course.id, colToAttachTo.id);
+				this.validateCourse(course.id, [courseYearIndex,0], true);
 			}
 		}else {
 			alert("Course already on planner");
@@ -128,7 +142,8 @@ class courseList{
 	}
 	
 	
-	
+	//delButton is the DOM element button on the deleted course
+	//courseName is the deleted courses name
 	removeCourse(delButton, courseName){
 		let courseWrapper = delButton.parentElement;
 		let courseHolderBody = courseWrapper.parentElement;
@@ -142,47 +157,44 @@ class courseList{
 	
 	//positions are body ids for course holders in format <year>-<term>-body
 	changeCourse(courseName, oldPosition, newPosition){
-		function removeFromOld(courseGrid, creditGrid, oldIndices, courseName){
+		function removeFromOldPos(courseGrid, creditGrid, oldIndices, courseName){
 			courseGrid[oldIndices[0]][oldIndices[1]].delete(courseName);
 			let term = Math.floor(oldIndices[1]/2);	
 			creditGrid[oldIndices[0]][term] -= 1;
 		}
-		function addToNew(courseGrid, creditGrid, newIndices, courseName){
+		function addToNewPos(courseGrid, creditGrid, newIndices, courseName){
 			courseGrid[newIndices[0]][newIndices[1]].add(courseName);
 			let term = Math.floor(newIndices[1]/2);
 			creditGrid[newIndices[0]][term] += 1;
 		}
 		let newIndices = this.posNameToIndex(newPosition);
 		let oldIndices = this.posNameToIndex(oldPosition);
-		console.log("new pos: " + newPosition);
 		
 		if (newPosition == 'outOfWPIBody'){
-			console.log("went to out of wpi body")
-			removeFromOld(this.courseGrid, this.creditGrid, oldIndices, courseName);
+			removeFromOldPos(this.courseGrid, this.creditGrid, oldIndices, courseName);
+			this.outOfWPICourses.add(courseName);
 			this.removeCourseWarningsEndingWith(courseName, oldIndices);
 			this.removeCourseWarningsStartingWith(courseName, oldIndices);
 		} else if (oldPosition == 'outOfWPIBody'){
-			addToNew(this.courseGrid, this.creditGrid, newIndices, courseName)
-			this.validateCourse(courseName, newIndices);
+			addToNewPos(this.courseGrid, this.creditGrid, newIndices, courseName)
+			this.outOfWPICourses.delete(courseName);
+			this.validateCourse(courseName, newIndices, false);
 			this.validateCredit(newIndices, oldIndices);
 		} else {
 			//course change
-			removeFromOld(this.courseGrid, this.creditGrid, oldIndices, courseName);
-			addToNew(this.courseGrid, this.creditGrid, newIndices, courseName);
-			this.validateCourse(courseName, newIndices);
+			removeFromOldPos(this.courseGrid, this.creditGrid, oldIndices, courseName);
+			addToNewPos(this.courseGrid, this.creditGrid, newIndices, courseName);
+			this.validateCourse(courseName, newIndices, false);
 			this.validateCredit(newIndices, oldIndices);
 		}
 	}
 	
 	removeCourseWarningsEndingWith(courseName, locIndices){
-		console.log("locIndices: " + locIndices)
 		let warnings = document.getElementById("CourseWarnings");
 		let toDelete = [];
 		warnings.childNodes.forEach(warning => {
 			let req = warning.id.split("-")[2];
 			let courseNeedingReq = warning.id.split("-")[0];
-			console.log(req);
-			console.log(courseNeedingReq);
 			let needingReqIndices = null;
 			for (let i = 0 ; i < 4 ; i++){
 				for (let j = 0; j < 4 ; j++){
@@ -193,9 +205,7 @@ class courseList{
 					}
 				}
 			}
-			console.log(needingReqIndices);
 			if (needingReqIndices == null){
-				console.log(this);
 				if (this.outOfWPICourses.has(courseNeedingReq)){
 					if (req == courseName){
 						toDelete.push(warning.id);
@@ -211,50 +221,99 @@ class courseList{
 			}
 		});
 		toDelete.forEach(id => {
-			warnings.removeChild(document.getElementById(id));
+			document.getElementById(id).style.display = "none";
 		});
 	}
 
 	//coursename is in format deptlevel
 	//location is the id of the body the course was changed or added into
-	validateCourse(courseName, locIndices){
-		console.log(locIndices);
-		let splitCourse = courseName.split(' ');
-		//delete earlier course warnings starting with this id 
-		let warnings = document.getElementById("CourseWarnings");
-		this.removeCourseWarningsStartingWith(splitCourse[0]);
-
-		//delete earlier course warnings that had this as a requirement, but only if this course is coming before what its a req to
-		this.removeCourseWarningsEndingWith(splitCourse[0], locIndices);
-
-		
-
-		//add new course warnings
-		
-		let curCourseJson = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
-		let reqs = curCourseJson['req'];
-		reqs.forEach(req => {
-			let reqName = req[0] + req[1];
-			let found = false;
-			if (this.outOfWPICourses.has(reqName)){
-				found = true;
+	//first time is whether the course just got added
+	validateCourse(courseName, locIndices, firstTime){
+		if (firstTime){ //add all the course warnings
+			let curCourseJson = this.jsonOfCourse(courseName);
+			this.WarningManager.addCourseWarning(courseName, curCourseJson);
+		} else { //not the first time
+			if (locIndices == "outOfWPIBody"){
+				//hide all related course warnings
+				this.WarningManager.hideCoursesNeeding(courseName);
+				this.WarningManager.hideCoursesNeeded(courseName);
+				return;
 			}
-			this.courseGrid.forEach(year => {
-				year.forEach(term => {
-					if (term.has(reqName)){
-						found = true;
-					}
-				});
-			});
-			if (found == false){
-				
-				let warnDiv = document.createElement("div");
-				warnDiv.id = courseName + '-without-' + reqName+ '-req-Warning';
-				warnDiv.innerText = courseName + ' is without recommnded class: ' + reqName;
-				warnDiv.classList.add("warning");
-				warnings.appendChild(warnDiv);
+		}
+		let thisCourseManager = this;
+		this.WarningManager.courseWarnings.forEach(function(warning){
+			if (warning.theRequirement == courseName){
+				let needingCourseIndices = thisCourseManager.courseNameToIndices(warning.needingRequirement);
+				if (needingCourseIndices[0] > locIndices[0] || (needingCourseIndices[0] == locIndices[0] && needingCourseIndices[1] > locIndices[1])){ 
+					console.log("1")
+					//hide all course warnings that have the moved course as a requirement if the course was moved before the course requiring it
+					thisCourseManager.WarningManager.revealCourseWarning(warning.needingRequirement, courseName, false);
+				} else {//reveal all course warnings that have the moved course as a requirement if the course was moved past or to the course requiring it
+					console.log("2")
+					thisCourseManager.WarningManager.revealCourseWarning(warning.needingRequirement, courseName, true);
+				}
+			} else if (warning.needingRequirement == courseName){
+				let requiredCourseIndices = thisCourseManager.courseNameToIndices(warning.theRequirement);
+				if (requiredCourseIndices[0] < locIndices[0] || (requiredCourseIndices[0] == locIndices[0] && requiredCourseIndices[1] < locIndices[1])){ 
+					console.log("3")
+					//hide all course warnings where the moved course is requiring something it moved past
+					thisCourseManager.WarningManager.revealCourseWarning(courseName, warning.theRequirement, false);
+				} else { //reveal all course warnings where the moved course went before its requirement
+					console.log("4")
+					thisCourseManager.WarningManager.revealCourseWarning(courseName, warning.theRequirement, true);
+				}
 			}
 		});
+		
+
+
+
+
+
+
+
+
+
+
+
+		// console.log(locIndices);
+		// let splitCourse = courseName.split(' ');
+		// //delete earlier course warnings starting with this id 
+		// let warnings = document.getElementById("CourseWarnings");
+		// this.removeCourseWarningsStartingWith(splitCourse[0]);
+
+		// //delete earlier course warnings that had this as a requirement, but only if this course is coming before what its a req to
+		// this.removeCourseWarningsEndingWith(splitCourse[0], locIndices);
+
+		
+
+		// //add new course warnings
+		// if (firstTime){
+		// 	let curCourseJson = this.jsonOfCourse(splitCourse[0], splitCourse[1]);
+		// 	let reqs = curCourseJson['req'];
+		// 	reqs.forEach(req => {
+		// 		let reqName = req[0] + req[1];
+		// 		let found = false;
+		// 		if (this.outOfWPICourses.has(reqName)){
+		// 			found = true;
+		// 		}
+		// 		this.courseGrid.forEach(year => {
+		// 			year.forEach(term => {
+		// 				if (term.has(reqName)){
+		// 					found = true;
+		// 				}
+		// 			});
+		// 		});
+		// 		if (found == false){
+					
+		// 			let warnDiv = document.createElement("div");
+		// 			warnDiv.id = courseName + '-without-' + reqName+ '-req-Warning';
+		// 			warnDiv.innerText = courseName + ' is without recommnded class: ' + reqName;
+		// 			warnDiv.classList.add("warning");
+		// 			warnings.appendChild(warnDiv);
+		// 		}
+		// 	});
+		// }
 	}
 	
 	//indices is an array of [credit grid year, credit grid semester] of the where the course moved into
@@ -272,7 +331,7 @@ class courseList{
 			});
 			if (oldHadWarning){
 				if (this.creditGrid[oldIndices[0]][oldIndices[1]] < 8){
-					warnings.removeChild(document.getElementById(oldWarningID));
+					document.getElementById(oldWarningID).style.display = "none";
 				}
 			}
 		}
@@ -311,7 +370,8 @@ class courseList{
 			}
 		});
 		warningsToRemove.forEach(warningID => {
-			warnings.removeChild(document.getElementById(warningID));
+
+			document.getElementById(warningID).style.display = "none";
 		});
 	}
 }
@@ -405,28 +465,6 @@ async function initAutoComplete(){
 	return courses;
 }
 
-
-	
-let listManager;
-function myLoad(){
-	let endingYear = 2022;
-
-	let grid = document.getElementById('board');
-	let idList = genYears(grid,yearArray, termArray);		
-	let button = document.getElementById('entryButton');
-	listManager = new courseList(idList);
-	dragula(idList).on('drop', function(e1, target, source){
-		listManager.changeCourse(e1.id, source.id, target.id);
-	});
-	
-	initAutoComplete().then(function(results){
-		listManager.loadCourseJson(results);
-		button.onclick = function(){
-			listManager.addCourse(results);};
-	});
-
-}
-
 function checkGradReq(){
 	let major = document.getElementById("major");
 	let majorToReqMap = new Map([['CS', csMajor]]);
@@ -443,6 +481,28 @@ function checkGradReq(){
 	}
 	gradDOM.innerText = reqStr;
 }
+
+	
+let listManager;
+function myLoad(){
+	let warningManager = new WarningManager();
+	let endingYear = 2022;
+	let grid = document.getElementById('board');
+	let idList = genYears(grid,yearArray, termArray);		
+	let button = document.getElementById('entryButton');
+	listManager = new courseManager(idList, warningManager);
+	dragula(idList).on('drop', function(e1, target, source){
+		listManager.changeCourse(e1.id, source.id, target.id);
+	});
+	
+	initAutoComplete().then(function(results){
+		listManager.loadCourseJson(results);
+		button.onclick = function(){
+			listManager.addCourse(results);};
+	});
+
+}
+
 
 
 
