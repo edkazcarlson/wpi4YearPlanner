@@ -348,7 +348,7 @@ let meMajorReq = new gradRule(function(courses){
     let courseToRemove = [];
     let chCount = 0;
     let phCount = 0;
-    let programming38Req = false;
+    let req38Done = false;
     courses.forEach(function(course){
         if (course.dept == 'MA'){
             mathCourseLevelsNeed.delete(course.level);
@@ -361,20 +361,46 @@ let meMajorReq = new gradRule(function(courses){
             courseToRemove.push(courseToRemove);
         } else if (course.dept == 'CS'){
             if (course.level == 1004 || course.level == 1101){
-                programming38Req = true;
+                req38Done = true;
                 courseToRemove.push(courseToRemove);
             }
         }
     });
     courseToRemove.forEach(function(course){
         courses.delete(course);
-    })
+    });
+    let mathSciCourses = filterCourses(courses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE']);
+    if (mathSciCourses.size < 2){
+        toReturn.push('Need at least 2 miscellaneous math and science courses');
+    }
     mathCourseLevelsNeed.forEach(function(val,key,map){
         toReturn.push(val);
     });
     if ((phCount > 1 && chCount > 2) || (chCount > 1 && phCount > 2)){
         toReturn.push('Need at least 2 physics courses and 1 chemsitry course or 1 physics course and 2 chemistry courses');
     }
+
+    let designCoursesToRemove = [];
+    let req30Done = false;
+    let req30Courses = [4320, 4322, 4810];
+    let req34Done = false;
+    let req34Courses = [4422, 4429];
+    let req31Done = false;
+    
+    courses.forEach(function(course){
+        if (course.dept == 'ES'){
+            requiredEsCourses.delete(course.level);
+            designCoursesToRemove.push(course);
+        } else if (course.dept == 'ME'){
+            if (req30Courses.includes(course.level)){
+                req30Done = true;
+                designCoursesToRemove.push(course);
+            } else if (req34Courses.includes(course.level)){
+                req34Courses = true;
+                designCoursesToRemove.push(course);
+            }
+        }
+    });
 
 });
 
