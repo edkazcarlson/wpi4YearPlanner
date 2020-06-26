@@ -360,10 +360,16 @@ let meMajorReq = new gradRule(function(courses){
             chCount++;
             courseToRemove.push(courseToRemove);
         } else if (course.dept == 'CS'){
-            if (course.level == 1004 || course.level == 1101){
+            if ((course.level == 1004 || course.level == 1101) || 
+            (course.dept == 'ME' && (course.level == 2312 || course.level == 4512)) || 
+            (course.dept == 'BME' && course.level == 1004)){
                 req38Done = true;
                 courseToRemove.push(courseToRemove);
             }
+        } else if (){
+
+        } else if (){
+
         }
     });
     courseToRemove.forEach(function(course){
