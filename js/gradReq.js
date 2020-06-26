@@ -310,12 +310,14 @@ let csMajorSciEngReq = new gradRule(function(courses){
     let atLeastTwoTaken = false;
     courses.forEach(function(course){
         if (hardSci.includes(course.dept)){
-            hardSciTaken++;
-            hardSciTaken[course.dept] = hardSciTaken[course.dept] + 1;
+            console.log("hard sci inclues: " + course.level + course.dept);
+            hardSciTaken.set(course.dept, hardSciTaken.get(course.dept) + 1);
+            console.log(hardSciTaken);
         }
     });
     hardSciTaken.forEach(function(val,key,map){
-        if (key >= 2){
+        console.log(val)
+        if (val >= 2){
             atLeastTwoTaken = true;
         }
     });
@@ -333,6 +335,50 @@ let csMajorSciEngReq = new gradRule(function(courses){
     return toReturn;
 });
 
+let meMajorReq = new gradRule(function(courses){
+    courses = filterCourses(courses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE', 'AE', 'AREN', 'BME', 'CE', 'CHE', 'ECE', 'ES', 'ME', 'RBE']);
+    let mathCourseLevelsNeed = new Map([[1021, 'Need to take MA 1021 Calculus 1'],[1022, 'Need to take MA 1022 Calculus 2'],[1023, 'Need to take MA 1023 Calculus 3'],
+    [1024, 'Need to take MA 1024 Calculus 4'],[2051, 'Need to take MA 2051 Ordinary Differential Equations'],[2071, 'Need to take MA 2071 Linear Algebra']]);
+    let requiredESLevel = [2501, 2502, 2503, 3004, 3003, 2001];
+    let requiredEsCourses = new Map();
+    requiredESLevel.forEach(function(level){
+        requiredEsCourses.set(level, String.format('Need to take ES %d', strinlevel));
+    })
+    let toReturn =  [];
+    let courseToRemove = [];
+    let chCount = 0;
+    let phCount = 0;
+    let programming38Req = false;
+    courses.forEach(function(course){
+        if (course.dept == 'MA'){
+            mathCourseLevelsNeed.delete(course.level);
+            courseToRemove.push(courseToRemove);
+        } else if (course.dept == 'PH'){
+            phCount++;
+            courseToRemove.push(course)
+        } else if (course.dept == 'CH') {
+            chCount++;
+            courseToRemove.push(courseToRemove);
+        } else if (course.dept == 'CS'){
+            if (course.level == 1004 || course.level == 1101){
+                programming38Req = true;
+                courseToRemove.push(courseToRemove);
+            }
+        }
+    });
+    courseToRemove.forEach(function(course){
+        courses.delete(course);
+    })
+    mathCourseLevelsNeed.forEach(function(val,key,map){
+        toReturn.push(val);
+    });
+    if ((phCount > 1 && chCount > 2) || (chCount > 1 && phCount > 2)){
+        toReturn.push('Need at least 2 physics courses and 1 chemsitry course or 1 physics course and 2 chemistry courses');
+    }
+
+});
+
+
 class majorGradReq{
     constructor(){
         this.reqs = [huaReq, huaCapstoneReq, ssReq, iqpReq, mqpReq];
@@ -349,6 +395,10 @@ class majorGradReq{
         this.reqs.forEach(function(req){
             changesNeeded = changesNeeded.concat(req.fulfilled(courseObjSet));
         });
+        if (courses.size < 45 && changesNeeded.size == 0){
+            changesNeeded = changesNeeded.concat("Need 3 free elective courses");
+        }
+        
         return changesNeeded;
     }
 }

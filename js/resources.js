@@ -22,7 +22,7 @@ function myLoad(){
     let stressResList = document.getElementById('StressResourcesList');
     let stressMap = new Map();
     stressMap.set('K-on', "https://myanimelist.net/anime/5680/K-On");
-    stressMap.set('Yuru Camp△', "https://myanimelist.net/anime/34798/Yuru_Camp%E2%96%B3");
+    stressMap.set('Yuru Camp', "https://myanimelist.net/anime/34798/Yuru_Camp%E2%96%B3");
     stressMap.set('Aria', "https://myanimelist.net/anime/477/Aria_the_Animation");
     stressMap.set('Usagi Drop', "https://myanimelist.net/anime/10162/Usagi_Drop");
     stressMap.set('Yotsuba To', "https://myanimelist.net/manga/104/Yotsuba_to");

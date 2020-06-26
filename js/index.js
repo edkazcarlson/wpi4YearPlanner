@@ -471,16 +471,18 @@ function checkGradReq(){
 	let majorToReqMap = new Map([['CS', csMajor]]);
 	let majorReq = majorToReqMap.get(major.value);
 	let gradDOM = document.getElementById("gradReqs");
+	gradDOM.innerHTML = '';
 	let reqArray = majorReq.canGraduate(listManager.getSplitCourseGrid());
 	let reqStr = '';
 	if (reqArray.size == 0){
 		reqStr = 'Can graduate with this set of courses';
 	} else {
 		reqArray.forEach(function(req){
-			reqStr += "⚫" + req + '\n';
+			let reqLI = document.createElement("li");
+			reqLI.innerText = req;
+			gradDOM.appendChild(reqLI);
 		})
 	}
-	gradDOM.innerText = reqStr;
 }
 
 	
