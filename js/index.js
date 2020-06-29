@@ -468,7 +468,7 @@ async function initAutoComplete(){
 
 function checkGradReq(){
 	let major = document.getElementById("major");
-	let majorToReqMap = new Map([['CS', csMajor]]);
+	let majorToReqMap = new Map([['CS', csMajor],['ME', meMajor]]);
 	let majorReq = majorToReqMap.get(major.value);
 	let gradDOM = document.getElementById("gradReqs");
 	gradDOM.innerHTML = '';

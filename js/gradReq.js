@@ -1,8 +1,18 @@
 function filterCourses(courses, allowedDepts){
-    let toReturn = []
+    let list = [];
     courses.forEach(function(course){
-        if (allowedDepts.includes(course.dept)){
-            toReturn.push(course);
+        list.push(course);
+    });
+    let filtered = list.filter(function(course){
+        return allowedDepts.indexOf(course.dept) != -1});
+    return filtered;
+}
+
+function includesCourse(courses, dept, level){
+    let toReturn = false;
+    courses.forEach(function(course){
+        if (course.dept  == dept && course.level == level){
+            toReturn = true;
         }
     });
     return toReturn;
@@ -46,23 +56,24 @@ let huaReq = new gradRule(function(courses){
 
     let deptThatCanCountTowards = [];
     courseToBucket.forEach(function(val, key){
-        deptThatCanCountTowards.push(val);
+        deptThatCanCountTowards.push(key);
     })
 
     let huaCourses = filterCourses(courses, deptThatCanCountTowards);
 
 
-
     let buckets = new Map();
     huaCourses.forEach(course => {
-        let bucketArr = courseToBucket.get(couse);
-        bucketArr.forEach( bucket => {
-            if (buckets.has(bucket)){
-                buckets.set(bucket, buckets.get(bucket) + 1);
-            } else {
-                buckets.set(bucket, 1);
-            }
-        });
+        let bucketArr = courseToBucket.get(course);
+        if (bucketArr != null){
+            bucketArr.forEach( bucket => {
+                if (buckets.has(bucket)){
+                    buckets.set(bucket, buckets.get(bucket) + 1);
+                } else {
+                    buckets.set(bucket, 1);
+                }
+            });
+        }
     });
     let depthCountFulfilled = false;
     let depth = null;
@@ -155,7 +166,6 @@ let mqpReq = new gradRule(function(courses){
 });
 
 let csMajorCSReq = new gradRule(function(courses){
-    console.log(courses);
     let toReturn = [];
     let sysBinFulfilled = false;
     let theoryBinFulfilled = false;
@@ -175,12 +185,7 @@ let csMajorCSReq = new gradRule(function(courses){
     let conflictSys = [2301, 2303];
 
     courses.forEach(course => {
-        console.log(course.dept);
-        console.log(course.level);
-        console.log(typeof(course.level));
-        console.log(typeof(designBinCoures[0]));
         if (course.dept == 'CS'){
-            console.log("Is a cs course");
             totalCourses++;
             if (conflict1000Level.includes(course.level)){ //if its a course that can have a conflict 
                 if (!accelPair1000Taken){//if they haven't taken the course's conflict yet, make it so that they have an add a course to coureses taken
@@ -336,78 +341,109 @@ let csMajorSciEngReq = new gradRule(function(courses){
 });
 
 let meMajorReq = new gradRule(function(courses){
-    courses = filterCourses(courses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE', 'AE', 'AREN', 'BME', 'CE', 'CHE', 'ECE', 'ES', 'ME', 'RBE']);
-    let mathCourseLevelsNeed = new Map([[1021, 'Need to take MA 1021 Calculus 1'],[1022, 'Need to take MA 1022 Calculus 2'],[1023, 'Need to take MA 1023 Calculus 3'],
-    [1024, 'Need to take MA 1024 Calculus 4'],[2051, 'Need to take MA 2051 Ordinary Differential Equations'],[2071, 'Need to take MA 2071 Linear Algebra']]);
+    //first do the most restrictive requirements, delete those from the course list
+    let toReturn = [];
+    let meCourses = filterCourses(courses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE', 'AE', 'AREN', 'BME', 'CE', 'CHE', 'ECE', 'ES', 'ME', 'RBE']);
     let requiredESLevel = [2501, 2502, 2503, 3004, 3003, 2001];
     let requiredEsCourses = new Map();
     requiredESLevel.forEach(function(level){
-        requiredEsCourses.set(level, String.format('Need to take ES %d', strinlevel));
-    })
-    let toReturn =  [];
-    let courseToRemove = [];
-    let chCount = 0;
-    let phCount = 0;
-    let req38Done = false;
-    courses.forEach(function(course){
+        requiredEsCourses.set(level, 'Need to take ES ' + level);
+    });
+    let requiredMALevel = [1021, 1022, 1023, 1024, 2051, 2071]
+    let requiredMACourses = new Map();
+    let req30Done = false;
+    let req34Done = false;
+    let req31WithES = false;
+    let req31WithNonES = false;
+    let req38WithME = false;
+    let req38WithCS = false;
+    let req38WithBME = false;
+    requiredMALevel.forEach(function(level){
+        requiredMACourses.set(level, 'Need to take MA ' + level);
+    });
+    let toDrop = [];
+    meCourses.filter(function(course){
         if (course.dept == 'MA'){
-            mathCourseLevelsNeed.delete(course.level);
-            courseToRemove.push(courseToRemove);
-        } else if (course.dept == 'PH'){
-            phCount++;
-            courseToRemove.push(course)
-        } else if (course.dept == 'CH') {
-            chCount++;
-            courseToRemove.push(courseToRemove);
-        } else if (course.dept == 'CS'){
-            if ((course.level == 1004 || course.level == 1101) || 
-            (course.dept == 'ME' && (course.level == 2312 || course.level == 4512)) || 
-            (course.dept == 'BME' && course.level == 1004)){
-                req38Done = true;
-                courseToRemove.push(courseToRemove);
-            }
-        } else if (){
-
-        } else if (){
-
+            requiredMACourses.delete(course.level);
+            return false;
+        } else if (course.dept == 'ES'){
+            requiredEsCourses.delete(course.level);
+            return false;
+        } else if (course.dept == 'ECE' && course.level == 1799){
+            return false;
         }
+        return true;
     });
-    courseToRemove.forEach(function(course){
-        courses.delete(course);
-    });
-    let mathSciCourses = filterCourses(courses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE']);
-    if (mathSciCourses.size < 2){
-        toReturn.push('Need at least 2 miscellaneous math and science courses');
-    }
-    mathCourseLevelsNeed.forEach(function(val,key,map){
+    requiredMACourses.forEach(function(val,key,map){
         toReturn.push(val);
     });
-    if ((phCount > 1 && chCount > 2) || (chCount > 1 && phCount > 2)){
-        toReturn.push('Need at least 2 physics courses and 1 chemsitry course or 1 physics course and 2 chemistry courses');
-    }
-
-    let designCoursesToRemove = [];
-    let req30Done = false;
-    let req30Courses = [4320, 4322, 4810];
-    let req34Done = false;
-    let req34Courses = [4422, 4429];
-    let req31Done = false;
-    
-    courses.forEach(function(course){
-        if (course.dept == 'ES'){
-            requiredEsCourses.delete(course.level);
-            designCoursesToRemove.push(course);
-        } else if (course.dept == 'ME'){
-            if (req30Courses.includes(course.level)){
-                req30Done = true;
-                designCoursesToRemove.push(course);
-            } else if (req34Courses.includes(course.level)){
-                req34Courses = true;
-                designCoursesToRemove.push(course);
-            }
-        }
+    requiredEsCourses.forEach(function(val,key,map){
+        toReturn.push(val);
     });
 
+    toDrop = [];
+    meCourses.forEach(function(course){
+        if (!req30Done && (course.dept == 'ME' && (course.level == 4320 || course.level == 4322 || course.level == 4810))){
+            req30Done = true;
+            toDrop.push(course);
+        } else if (course.dept == 'ES' && course.level == 3001){
+            req31WithES = true;
+        } else if ((course.dept == 'CH' && course.level == 3510) || (course.dept == 'PH' && course.level == 2101)){
+            req31WithNonES = true;
+        } else if (!req34Done && (course.dept == 'ME' && (course.level == 4422 || course.level == 4429))){
+            req34Done = true;
+            toDrop.push(course);
+        } else if (course.dept == 'ME' && (course.level == 2312 && course.level == 4512)){
+            req38WithME = true;
+        } else if (course.dept == 'CS' && (course.level == 1101 || course.level == 1004)){
+            req38WithCS = true;
+        } else if (course.dept == 'BME' && course.level == 1004){
+            req38WithBME = true;
+        }
+    });
+    let req31Done = req31WithES || req31WithNonES;
+    //see the # of mathsci courses, then decide if you can use them for specific row req or you can use for row 25/26
+    let possibleMiscMathSciCourses = filterCourses(meCourses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE']);
+    let leeWaySciCourses = possibleMiscMathSciCourses.length - 2;
+    let mustUseSciForThermo = false;
+    let clear = false;
+    let engAbove2000Count = 0;
+    if (leeWaySciCourses == 0 && (includesCourse(possibleMiscMathSciCourses, 'CS', 1101) || includesCourse(possibleMiscMathSciCourses, 'CS', 1004))){ 
+        //must use cs class towards the mathsci req
+        if (req38WithBME && req38WithME){
+            engAbove2000Count++
+        }
+    } else if (leeWaySciCourses > 0 && (includesCourse(possibleMiscMathSciCourses, 'CS', 1101) || includesCourse(possibleMiscMathSciCourses, 'CS', 1004))){
+        //can use cs course towards mathsci req, mathsci fullfilled no matter what
+        if (req38WithME && !req38WithBME){//req 38 fullfilled, 1 course to final 5 elective
+            engAbove2000Count++;
+        }else if (req38WithME && req38WithBME){ //req 38 fullfilled, 1 course to final 5 electives
+            engAbove2000Count++;
+        } 
+    } else if (leeWaySciCourses >= 0){//38 is fullfilled
+        if (!(req38WithCS || req38WithBME || req38WithME)){
+            toReturn.push("Need a programming course");
+        }
+    } else {//38 not fulfilled
+        toReturn.push("Student selected courses (25/26) requirement not fulfilled");
+    }
+    toDrop.forEach(function(course){
+        meCourses.delete(course);
+    });
+    let esMECount = filterCourses(meCourses, ['ES', 'ME']).length;
+    let engCourses = filterCourses(meCourses, ['AE', 'AREN', 'BME', 'CE', 'CHE', 'ECE', 'RBE']);
+    engCourses.forEach(function(course){
+        if (course.level > 2000){
+            engAbove2000Count++;
+        }
+    });
+    console.log(engAbove2000Count);
+    console.log(esMECount);
+    if (engAbove2000Count + esMECount < 5){
+        toReturn.push('Number of elective engineering courses at or above 2000 level and ES and ME courses at or above 1000 level '+
+        'must be 4 if using ES3001 for thermo requirement, otherwise need 5.');
+    }
+    return toReturn;
 });
 
 
@@ -437,4 +473,5 @@ class majorGradReq{
 
 var csMajor = new majorGradReq();
 csMajor.addReqs([csMajorCSReq, csMajorMathReq, csMajorSciEngReq]);
-
+var meMajor = new majorGradReq();
+meMajor.addReqs([meMajorReq]);
