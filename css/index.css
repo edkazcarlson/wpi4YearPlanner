@@ -1,8 +1,8 @@
 .sidebar {
 	padding: 20px;
-	border-left: 2px solid black;
-	
+	border-top: 2px solid black;
 }
+
 
 
 
@@ -30,13 +30,17 @@
 	
 }
 
+.customBody{
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+}
 
 .warning {
 	color: red;
 }
 
 /**
-Following are from https://flexbox.ninja/demos/holy-grail-layout/
+Following are based on https://flexbox.ninja/demos/holy-grail-layout/
 */
 /**
  * Make body at least 100% height
@@ -77,6 +81,7 @@ Following are from https://flexbox.ninja/demos/holy-grail-layout/
  */
 .holy-grail-sidebar-1 {
 	order: -1;
+	margin-left: 10px;
 }
 
 /**
@@ -91,11 +96,19 @@ Following are from https://flexbox.ninja/demos/holy-grail-layout/
 		flex-direction: row;
 	}
 
+	.sidebar {
+		padding: 20px;
+		border-left: 2px solid black;
+		border-top: none;
+	}
+	
+
 	/**
 	 * Sidebars have a basic 260 width
 	 * and are not really flexible anymore
 	 */
 	.hg-sidebar {
 		flex: 0 0 260px;
+		border-left: 2px solid black;	
 	}
 }

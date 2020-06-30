@@ -483,6 +483,9 @@ function checkGradReq(){
 			gradDOM.appendChild(reqLI);
 		})
 	}
+	let reqDiv = document.getElementById('reqsDiv');
+	reqDiv.style.opacity = '1';	
+	reqDiv.style.flex = '0 0 260px';
 }
 
 	
@@ -506,7 +509,17 @@ function myLoad(){
 
 }
 
-
+function majorChange(){
+	console.log("clear major");
+	let reqs = document.getElementById('gradReqs');
+	reqs.innerHTML = '';
+	let reqDiv = document.getElementById('reqsDiv');
+	reqDiv.style.opacity = '0';	
+	reqDiv.style.flex = '0 0 0px';
+}
+document.getElementById('major').onchange = majorChange;
 
 
 window.onload = myLoad
+majorChange();
+
