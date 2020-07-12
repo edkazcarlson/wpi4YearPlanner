@@ -10,6 +10,8 @@ export class CourseSearcher extends Component {
         super(props);
         this.state = {chosenCourse: ''};
     }
+
+
     
     render() {
         return (
