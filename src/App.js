@@ -25,15 +25,22 @@ export class App extends Component {
 			courseGrid.push(yearArray);
 		}
     this.state = {courseToAdd : '', courses : courseGrid, outOfWPICourses: outOfWPICourses, delCourse: this.delCourse}
+    this.courseSet = new Set();
   }
 
   addCourse = (courseName) => {
-    this.setState({courseToAdd: courseName});
-    let copy = this.state.courses;
-    copy[0][0].push(courseName);
-    this.setState({courses: copy});
-    this.setState({outOfWPICourses: new Set(['ooga booga'])})
-    console.log(this.state)
+    if (this.courseSet.has(courseName)){
+      alert("Already taken this course.");
+    } else {
+      this.courseSet.add(courseName);
+      this.setState({courseToAdd: courseName});
+      let copy = this.state.courses;
+      copy[0][0].push(courseName);
+      this.setState({courses: copy});
+      this.setState({outOfWPICourses: new Set(['ooga booga'])})
+      console.log(this.state)
+    }
+
   }
 
   delCourse = (name) =>{
@@ -47,12 +54,14 @@ export class App extends Component {
         <h2 className="section-title"><span>4 Year Planner</span></h2>
         <div className = "holy-grail-body customBody">
           <div className = "holy-grail-sidebar-1"></div>
-          <Board delCourse = {this.state.delCourse} outOfWPICourses = {this.state.outOfWPICourses} courses = {this.state.courses}/>
+          <Board delCourse = {this.state.delCourse} 
+                  outOfWPICourses = {this.state.outOfWPICourses} 
+                  courses = {this.state.courses}/>
           <div id = "sidebar" className = "sidebar hg-sidebar">
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
               <StudentData/>
               <button type="button" onClick="checkGradReq()">Check graduation requirements</button>
-              <Warnings/>
+              <Warnings courses = {this.state.courses} outOfWPICourses = {this.state.outOfWPICourses}/>
               <Info/>
           </div>
           <GradReqs/>

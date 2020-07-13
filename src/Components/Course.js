@@ -5,6 +5,7 @@ export class Course extends Component {
         return (
             <div className="course">
             {this.props.courseName}
+            <br/>
                 <button onClick = {this.props.delCourse(this.props.courseName)}>Delete Course</button>
             </div>
         )
