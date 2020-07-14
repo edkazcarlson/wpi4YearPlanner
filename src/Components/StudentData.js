@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 
 export class StudentData extends Component {
+    constructor(props){
+        super(props);
+    }
+
+    onChange = () => {
+        this.props.changeMajor(document.getElementById('major').value);
+    }
+
     render() {
         return (
             <div>
-                <div>Graduation/Senior Year</div>
-                    <select name="grad" id="gradYear">
-                        <option value={true}>Even Graduation Year</option>
-                        <option value={false}>Odd Graduation Year</option>
-                    </select>
-                <select name="major" id="major">
+                <select name="major" id="major" onChange = {this.onChange}>
                     <option value="CS">Computer Science</option>
                     <option value="ME">Mechanical Engineering</option>
                 </select>

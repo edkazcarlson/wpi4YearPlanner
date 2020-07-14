@@ -3,14 +3,11 @@ import React, { Component } from 'react'
 export class Warnings extends Component {
     constructor(props){
         super(props);
-        this.state = {courseJSON : null};
-        fetch('../data/allCourses.json').then(response => response.json()).then((data) => {this.setState({courseJSON : data})});
     }
 
     buildCourseWarnings() {
-        console.log(this.props.courses);
         let takenCourses = new Set(this.props.outOfWPICourses);
-        let courseJSON = this.state.courseJSON;
+        let courseJSON = this.props.courseJSON;
         let warnings = [];
         this.props.courses.forEach(year => {
             year.forEach((term) => {
@@ -20,7 +17,6 @@ export class Warnings extends Component {
                     coursesTakenthisTerm.push(courseID);
                     courseJSON[courseID + '.json']['req'].forEach(function(courseTuple){
                         if (!takenCourses.has(courseTuple[0] + courseTuple[1])){
-                            console.log("add warning");
                             warnings.push("Course " + courseID + " has pre-req " + courseTuple[0] + courseTuple[1]);
                        } 
                    });
@@ -37,12 +33,32 @@ export class Warnings extends Component {
             <div style = {{color: 'red'}} key = {warning}>{warning}</div>
             ))}
         </div>);
+    }
 
+    buildCreditWarnings(){
+        let warnings = [];
+        let terms = ['A-B', 'C-D']
+        this.props.courses.forEach(year => {
+            for (let i = 0 ; i < 2 ; i++){
+                let A = year[i*2];
+                let B = year[i*2 + 1];
+                if (A.length + B.length > 7){
+                    warnings.push("Terms " + terms[i] + " have too many courses, taking more than 7 in a semester incurs a fee");
+                }
+            }
+        })
+        return (
+            <div id = "CreditWarnings">
+                {warnings.map((warning) => (
+                    <div style = {{color: 'red'}} key = {warning}>{warning}</div>
+                ))}
+            </div>
+        );
     }
     render() {
         return (
             <div id = "Warnings">
-              <div id = "CreditWarnings"></div>
+              {this.buildCreditWarnings()}
               {this.buildCourseWarnings()}
             </div>
         )

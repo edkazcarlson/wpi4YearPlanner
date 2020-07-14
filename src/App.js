@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import CourseSearcher from './Components/CourseSearcher'
-import GradReqs from './Components/GradReqsList'
+import GradReqsList from './Components/GradReqsList'
 import StudentData from './Components/StudentData'
 import Info from './Components/Info'
 import Warnings from './Components/Warnings'
@@ -13,6 +13,7 @@ import './css/skeleton.css'
 
 export class App extends Component {
   constructor(props){
+
     super(props);
     let courseGrid = [];
 		let outOfWPICourses = [];
@@ -27,30 +28,36 @@ export class App extends Component {
                   courses : courseGrid, 
                   outOfWPICourses: outOfWPICourses, 
                   delCourse: this.delCourse,
+                  major: 'CS',
+                  courseJSON : null
                 }
+    fetch('../data/allCourses.json').then(response => response.json()).then((data) => {this.setState({courseJSON : data})});
     this.courseSet = new Set();
   }
 
   addCourse = (courseName) => {
     if (this.courseSet.has(courseName)){
       alert("Already taken this course.");
-    } else {
+    } else if (this.state.courseJSON.hasOwnProperty(courseName.split(" ")[0] + '.json')){
       this.courseSet.add(courseName);
       this.setState({courseToAdd: courseName});
       let copy = this.state.courses;
       copy[0][0].push(courseName);
       this.setState({courses: copy});
-      console.log(this.state)
+    } else {
+      alert("No course with this name exists");
     }
+    console.log(this.state);
+  }
+
+  changeMajor = (newMajor) => {
+    console.log(newMajor)
+    this.setState({major: newMajor});
   }
 
   moveCourse = (courseName, fromTuple, toTuple, fromOut, toOut) => {
-    console.log(fromTuple);
-    console.log(toTuple);
     if (!fromOut && !toOut){ //stays in normal bounds
-      console.log("stays in bounds")
       let copy = this.state.courses;
-      console.log(copy);
       copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
         return termCourse != courseName;
       });
@@ -59,9 +66,6 @@ export class App extends Component {
     } else if (!fromOut && toOut){//starts in ends out
       let copy = this.state.courses;
       copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
-        console.log(termCourse);
-        console.log(courseName);
-        console.log(termCourse != courseName)
         return termCourse != courseName;
       });
       let outOfCopy = this.state.outOfWPICourses;
@@ -80,7 +84,6 @@ export class App extends Component {
     } else {
       //stays out
     }
-    console.log(this.state);
   }
 
   delCourse = (name) =>{
@@ -100,12 +103,14 @@ export class App extends Component {
                   moveCourse = {this.moveCourse.bind(this)}/>
           <div id = "sidebar" className = "sidebar hg-sidebar">
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
-              <StudentData/>
+              <StudentData changeMajor = {this.changeMajor} major = {this.state.major}/>
               <button type="button" onClick="checkGradReq()">Check graduation requirements</button>
-              <Warnings courses = {this.state.courses} outOfWPICourses = {this.state.outOfWPICourses}/>
+              <Warnings courseJSON = {this.state.courseJSON}
+               courses = {this.state.courses} 
+               outOfWPICourses = {this.state.outOfWPICourses}/>
               <Info/>
           </div>
-          <GradReqs/>
+          <GradReqsList major = {this.state.major} courses = {this.state.courses} outOfWPICourses = {this.state.outOfWPICourses}/>
         </div>
       </div>
     )

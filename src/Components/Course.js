@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 export class Course extends Component {
 
     onDragStart = (event, taskName) => {
-        console.log('dragstart on div: ', event);
         event.dataTransfer.setData("taskName", taskName);
         event.dataTransfer.setData("startYear", this.props.indices[0]);
         event.dataTransfer.setData("startTerm", this.props.indices[1]);

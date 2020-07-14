@@ -9,7 +9,6 @@ export class Board extends Component {
     }
 
     onDragStart = (event, taskName) => {
-    	console.log('dragstart on div: ', taskName);
     	event.dataTransfer.setData("taskName", taskName);
 	}
 	onDragOver = (event) => {
@@ -28,9 +27,6 @@ export class Board extends Component {
         if (indices[0] == -1){
             toOut = true;
         }
-        console.log(event);
-        console.log(taskName)
-        console.log(indices);
         this.props.moveCourse(taskName, [startYear, startTerm], indices, fromOut, toOut);
 	}
 
@@ -69,8 +65,8 @@ export class Board extends Component {
                         onDragOver={(event)=>this.onDragOver(event)}
                         onDrop={(event)=>{this.onDrop(event, [yearIndex, termIndex])}}>
                             {this.props.courses[yearIndex][termIndex].map((course) => (
-                            <Course key = {this.props.newCourse} 
-                            courseName = {this.props.newCourse} 
+                            <Course key = {course}
+                            courseName = {course} 
                             delCourse = {this.props.delCourse}
                             indices = {[yearIndex, termIndex]}/>))
                             }

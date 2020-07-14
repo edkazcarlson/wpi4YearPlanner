@@ -19,9 +19,7 @@ export class CourseSearcher extends Component {
                 <Autocomplete
                     value={this.state.chosenCourse}
                     onChange={(event, newValue) => {
-                        console.log(this.state);
                         this.setState({chosenCourse: newValue});
-                        console.log(this.state);
                     }}
                     options={courseData().map((course) => course.courseTitle)}
                     style={{ width: 300 }}
@@ -32,6 +30,7 @@ export class CourseSearcher extends Component {
         )
     }
     addCourse = () =>{
+        console.log("hit")
         this.props.addCourse(this.state.chosenCourse);
     }
 }

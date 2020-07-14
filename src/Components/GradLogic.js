@@ -1,5 +1,3 @@
-import React, { Component } from 'react'
-
 function filterCourses(courses, allowedDepts){
     let list = [];
     courses.forEach(function(course){
@@ -484,62 +482,3 @@ function getMajorReq(major){
     return majorToReqMap.get(major);
 
 }
-
-function splitAbbreviationLevel(courseName){
-    let id = courseName.split(' ')[0]
-    let index  = id.search(/\d/)
-    let abbr = id.split(0,index);
-    let lvl = id.split(index, id.length);
-    return [abbr, lvl];
-}
-
-export class GradReqsList extends Component {
-    constructor(props){
-        super(props);
-        this.state = {major: this.props.major}
-    }
-
-
-    //Takes the current courseGrid and makes a single array of all the courses taken in format [department, level]
-	getSplitCourseGrid(){
-		let gridToReturn = [];
-		for (let i = 0 ; i < 4 ; i++){
-			for (let j = 0; j < 4 ; j++){
-				let term = this.props.courses[i][j];
-				let thisMangager = this;
-				term.forEach(function(course){
-					gridToReturn.push(splitAbbreviationLevel(course));
-				});
-			}
-		}
-		this.props.outOfWPICourses.forEach(function(course){
-			gridToReturn.push(splitAbbreviationLevel(course));
-		});
-		return gridToReturn;
-	}
-
-    checkGradReq(){
-        let major = this.props.major        
-        let majorReq = getMajorReq(major);
-        console.log(majorReq);
-    }
-
-    render() {
-        console.log(this.props.courses);
-        this.checkGradReq();
-        return (
-            <div id = 'reqsDiv' className = "sidebar hg-sidebar" >
-                <div>
-                    Graduation Requriements for {this.props.major} majors:
-                </div>
-                <ul id = 'gradReqs'>
-        
-                </ul>
-          </div>
-        )
-    }
-}
-
-export default GradReqsList
-
-
