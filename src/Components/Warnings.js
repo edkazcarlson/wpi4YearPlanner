@@ -8,6 +8,7 @@ export class Warnings extends Component {
     }
 
     buildCourseWarnings() {
+        console.log(this.props.courses);
         let takenCourses = new Set(this.props.outOfWPICourses);
         let courseJSON = this.state.courseJSON;
         let warnings = [];
@@ -18,9 +19,10 @@ export class Warnings extends Component {
                     let courseID = course.split(' ')[0];
                     coursesTakenthisTerm.push(courseID);
                     courseJSON[courseID + '.json']['req'].forEach(function(courseTuple){
-                       if (!takenCourses.has(courseTuple[0] + courseTuple[1])){
-                           warnings.push("Course " + courseID + " has pre-req " + courseTuple[0] + courseTuple[1]);
-                       }
+                        if (!takenCourses.has(courseTuple[0] + courseTuple[1])){
+                            console.log("add warning");
+                            warnings.push("Course " + courseID + " has pre-req " + courseTuple[0] + courseTuple[1]);
+                       } 
                    });
                 });
                 coursesTakenthisTerm.forEach(function(course){
@@ -28,7 +30,6 @@ export class Warnings extends Component {
                 });
             })
         });
-        console.log(warnings);
 
         return (
         <div id = "CourseWarnings">        

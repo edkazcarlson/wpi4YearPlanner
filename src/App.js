@@ -5,7 +5,6 @@ import StudentData from './Components/StudentData'
 import Info from './Components/Info'
 import Warnings from './Components/Warnings'
 import Board from './Components/Board'
-import CustomLi from './Components/CustomLi'
 import './css/auto-complete.css'
 import './css/index.css'
 import './css/dragula.css'
@@ -24,7 +23,11 @@ export class App extends Component {
 			}
 			courseGrid.push(yearArray);
 		}
-    this.state = {courseToAdd : '', courses : courseGrid, outOfWPICourses: outOfWPICourses, delCourse: this.delCourse}
+    this.state = {courseToAdd : '', 
+                  courses : courseGrid, 
+                  outOfWPICourses: outOfWPICourses, 
+                  delCourse: this.delCourse,
+                }
     this.courseSet = new Set();
   }
 
@@ -37,10 +40,43 @@ export class App extends Component {
       let copy = this.state.courses;
       copy[0][0].push(courseName);
       this.setState({courses: copy});
-      this.setState({outOfWPICourses: new Set(['ooga booga'])})
       console.log(this.state)
     }
+  }
 
+  moveCourse = (courseName, fromTuple, toTuple, fromOut, toOut) => {
+    if (!fromOut && !toOut){ //stays in normal bounds
+      let copy = this.state.courses;
+      copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
+        return termCourse != courseName;
+      });
+      copy[toTuple[0]][toTuple[1]].push(courseName);
+      this.setState({courses: copy});
+    } else if (!fromOut && toOut){//starts in ends out
+      let copy = this.state.courses;
+      // copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
+      //   console.log(termCourse);
+      //   console.log(courseName);
+      //   console.log(termCourse != courseName)
+      //   return termCourse != courseName;
+      // });
+      let outOfCopy = this.state.outOfWPICourses;
+      outOfCopy.push(courseName);
+      this.setState({courses: copy});
+      this.setState({outOfWPICourses: outOfCopy});
+    } else if (fromOut && !toOut){ //starts out ends in
+      // let outOfCopy = this.state.outOfWPICourses;
+      // outOfCopy = outOfCopy.filter(function(termCourse){
+      //   return termCourse != courseName;
+      // });
+      let mainCopy = this.state.courses;
+      mainCopy[toTuple[0]][toTuple[1]].push(courseName);
+      this.setState({courses: mainCopy});
+      //this.setState({outOfWPICourses: outOfCopy});
+    } else {
+      //stays out
+    }
+    console.log(this.state);
   }
 
   delCourse = (name) =>{
@@ -50,13 +86,14 @@ export class App extends Component {
   render() {
     return (
       <div>
-        <p >{this.state.courseToAdd}</p>
         <h2 className="section-title"><span>4 Year Planner</span></h2>
         <div className = "holy-grail-body customBody">
           <div className = "holy-grail-sidebar-1"></div>
           <Board delCourse = {this.state.delCourse} 
                   outOfWPICourses = {this.state.outOfWPICourses} 
-                  courses = {this.state.courses}/>
+                  courses = {this.state.courses}
+                  newCourse = {this.state.courseToAdd}
+                  moveCourse = {this.moveCourse.bind(this)}/>
           <div id = "sidebar" className = "sidebar hg-sidebar">
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
               <StudentData/>

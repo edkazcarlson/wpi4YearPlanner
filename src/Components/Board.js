@@ -8,11 +8,27 @@ export class Board extends Component {
         this.dragulaList = [];
     }
 
+    //positions are in format <year>-<term>-body, returns the respective index for the courseGrid
+	//ex: Sophmore-B-body would return [1,1]
+	posNameToIndex(posName){
+		const splitName = posName.split('-');
+		const firstIndex = yearArray.indexOf(splitName[0]);
+		const secondIndex = termArray.indexOf(splitName[1]);
+		return [firstIndex, secondIndex];
+	}
+
     dragulaDecorator = (domElement) => {
         this.dragulaList.push(domElement);
-        console.log(domElement);
         if (domElement.id == 'Senior-D-body'){
-            Dragula(this.dragulaList)
+            let trueThis = this;
+            // Dragula(this.dragulaList).on('drop',  function(e1, target, source){
+            //     let fromOut = source.id == 'outOfWPIBody';
+            //     console.log(target)
+            //     let toOut = target.id == 'outOfWPIBody';
+            //     trueThis.props.moveCourse(e1.id, trueThis.posNameToIndex(source.id),trueThis.posNameToIndex(target.id),
+            //      fromOut, toOut);
+            // }
+            // );
         }
     }
 
@@ -33,9 +49,11 @@ export class Board extends Component {
                     <div key = {yearArray[yearIndex] + termArray[termIndex]} id={yearArray[yearIndex] + termArray[termIndex]} >
                         <div className="header">{yearArray[yearIndex] + " " + termArray[termIndex]} term</div>
                         <div className="body" id={yearArray[yearIndex] + "-" + termArray[termIndex] + "-body"} ref = {this.dragulaDecorator}>
-                            {this.props.courses[yearIndex][termIndex].map((course) => (
-                                <Course key = {course} courseName = {course} delCourse = {this.props.delCourse}/>
-                            ))}
+                            {(yearIndex == 0 && termIndex == 0 && this.props.newCourse != '') ?  
+                            <Course key = {this.props.newCourse} 
+                            courseName = {this.props.newCourse} 
+                            delCourse = {this.props.delCourse}/> : null
+                            }
                         </div>
                     </div>
                 ))}
