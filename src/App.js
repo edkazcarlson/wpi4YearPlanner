@@ -45,8 +45,12 @@ export class App extends Component {
   }
 
   moveCourse = (courseName, fromTuple, toTuple, fromOut, toOut) => {
+    console.log(fromTuple);
+    console.log(toTuple);
     if (!fromOut && !toOut){ //stays in normal bounds
+      console.log("stays in bounds")
       let copy = this.state.courses;
+      console.log(copy);
       copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
         return termCourse != courseName;
       });
@@ -54,25 +58,25 @@ export class App extends Component {
       this.setState({courses: copy});
     } else if (!fromOut && toOut){//starts in ends out
       let copy = this.state.courses;
-      // copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
-      //   console.log(termCourse);
-      //   console.log(courseName);
-      //   console.log(termCourse != courseName)
-      //   return termCourse != courseName;
-      // });
+      copy[fromTuple[0]][fromTuple[1]] = copy[fromTuple[0]][fromTuple[1]].filter(function(termCourse){
+        console.log(termCourse);
+        console.log(courseName);
+        console.log(termCourse != courseName)
+        return termCourse != courseName;
+      });
       let outOfCopy = this.state.outOfWPICourses;
       outOfCopy.push(courseName);
       this.setState({courses: copy});
       this.setState({outOfWPICourses: outOfCopy});
     } else if (fromOut && !toOut){ //starts out ends in
-      // let outOfCopy = this.state.outOfWPICourses;
-      // outOfCopy = outOfCopy.filter(function(termCourse){
-      //   return termCourse != courseName;
-      // });
+      let outOfCopy = this.state.outOfWPICourses;
+      outOfCopy = outOfCopy.filter(function(termCourse){
+        return termCourse != courseName;
+      });
       let mainCopy = this.state.courses;
       mainCopy[toTuple[0]][toTuple[1]].push(courseName);
       this.setState({courses: mainCopy});
-      //this.setState({outOfWPICourses: outOfCopy});
+      this.setState({outOfWPICourses: outOfCopy});
     } else {
       //stays out
     }

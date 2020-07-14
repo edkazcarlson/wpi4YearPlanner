@@ -8,6 +8,32 @@ export class Board extends Component {
         this.dragulaList = [];
     }
 
+    onDragStart = (event, taskName) => {
+    	console.log('dragstart on div: ', taskName);
+    	event.dataTransfer.setData("taskName", taskName);
+	}
+	onDragOver = (event) => {
+	    event.preventDefault();
+	}
+
+	onDrop = (event, indices) => {
+        let fromOut = false;
+        let toOut = false;
+        let taskName = event.dataTransfer.getData("taskName");
+        let startYear = parseInt(event.dataTransfer.getData("startYear"));
+        let startTerm = parseInt(event.dataTransfer.getData("startTerm"));
+        if (startYear == -1){
+            fromOut = true;
+        }
+        if (indices[0] == -1){
+            toOut = true;
+        }
+        console.log(event);
+        console.log(taskName)
+        console.log(indices);
+        this.props.moveCourse(taskName, [startYear, startTerm], indices, fromOut, toOut);
+	}
+
     //positions are in format <year>-<term>-body, returns the respective index for the courseGrid
 	//ex: Sophmore-B-body would return [1,1]
 	posNameToIndex(posName){
@@ -17,29 +43,19 @@ export class Board extends Component {
 		return [firstIndex, secondIndex];
 	}
 
-    dragulaDecorator = (domElement) => {
-        this.dragulaList.push(domElement);
-        if (domElement.id == 'Senior-D-body'){
-            let trueThis = this;
-            // Dragula(this.dragulaList).on('drop',  function(e1, target, source){
-            //     let fromOut = source.id == 'outOfWPIBody';
-            //     console.log(target)
-            //     let toOut = target.id == 'outOfWPIBody';
-            //     trueThis.props.moveCourse(e1.id, trueThis.posNameToIndex(source.id),trueThis.posNameToIndex(target.id),
-            //      fromOut, toOut);
-            // }
-            // );
-        }
-    }
-
     render() {
         return (
         <div>
             <div id="outOfWPICol">
                 <div className="header">Courses Taken Outside WPI</div>
-                <div className="body" id="outOfWPIBody" ref = {this.dragulaDecorator}>
-                    {this.props.outOfWPICourses.entries((course) => (
-                        <Course key = {course} courseName = {course} delCourse = {this.props.delCourse}/>
+                <div className="body" id="outOfWPIBody"
+                onDragOver={(event)=>this.onDragOver(event)}
+                onDrop={(event)=>{this.onDrop(event, [-1, -1])}} >
+                    {this.props.outOfWPICourses.map((course) => (
+                        <Course key = {course} 
+                        courseName = {course} 
+                        delCourse = {this.props.delCourse}
+                        indices = {[-1, -1]}/>
                     ))}
                 </div>
             </div> {
@@ -48,11 +64,15 @@ export class Board extends Component {
                 {termIndicies.map((termIndex) => (
                     <div key = {yearArray[yearIndex] + termArray[termIndex]} id={yearArray[yearIndex] + termArray[termIndex]} >
                         <div className="header">{yearArray[yearIndex] + " " + termArray[termIndex]} term</div>
-                        <div className="body" id={yearArray[yearIndex] + "-" + termArray[termIndex] + "-body"} ref = {this.dragulaDecorator}>
-                            {(yearIndex == 0 && termIndex == 0 && this.props.newCourse != '') ?  
+                        <div className="body" 
+                        id={yearArray[yearIndex] + "-" + termArray[termIndex] + "-body"} 
+                        onDragOver={(event)=>this.onDragOver(event)}
+                        onDrop={(event)=>{this.onDrop(event, [yearIndex, termIndex])}}>
+                            {this.props.courses[yearIndex][termIndex].map((course) => (
                             <Course key = {this.props.newCourse} 
                             courseName = {this.props.newCourse} 
-                            delCourse = {this.props.delCourse}/> : null
+                            delCourse = {this.props.delCourse}
+                            indices = {[yearIndex, termIndex]}/>))
                             }
                         </div>
                     </div>
