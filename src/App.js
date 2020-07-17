@@ -53,6 +53,7 @@ export class App extends Component {
   changeMajor = (newMajor) => {
     console.log(newMajor)
     this.setState({major: newMajor});
+    console.log(this.state)
   }
 
   moveCourse = (courseName, fromTuple, toTuple, fromOut, toOut) => {

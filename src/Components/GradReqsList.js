@@ -439,8 +439,6 @@ let meMajorReq = new gradRule(function(courses){
             engAbove2000Count++;
         }
     });
-    console.log(engAbove2000Count);
-    console.log(esMECount);
     if (engAbove2000Count + esMECount < 5){
         toReturn.push('Number of elective engineering courses at or above 2000 level and ES and ME courses at or above 1000 level '+
         'must be 4 if using ES3001 for thermo requirement, otherwise need 5.');
@@ -488,17 +486,17 @@ function getMajorReq(major){
 function splitAbbreviationLevel(courseName){
     let id = courseName.split(' ')[0]
     let index  = id.search(/\d/)
-    let abbr = id.split(0,index);
-    let lvl = id.split(index, id.length);
+    let abbr = id.slice(0,index);
+    let lvl = id.slice(index, id.length);
     return [abbr, lvl];
 }
 
 export class GradReqsList extends Component {
     constructor(props){
         super(props);
-        this.state = {major: this.props.major}
+        this.state = {major: this.props.major, majorReq : getMajorReq(this.props.major)}
+        this.grid = this.getSplitCourseGrid();
     }
-
 
     //Takes the current courseGrid and makes a single array of all the courses taken in format [department, level]
 	getSplitCourseGrid(){
@@ -506,8 +504,8 @@ export class GradReqsList extends Component {
 		for (let i = 0 ; i < 4 ; i++){
 			for (let j = 0; j < 4 ; j++){
 				let term = this.props.courses[i][j];
-				let thisMangager = this;
 				term.forEach(function(course){
+                    console.log(course)
 					gridToReturn.push(splitAbbreviationLevel(course));
 				});
 			}
@@ -519,21 +517,27 @@ export class GradReqsList extends Component {
 	}
 
     checkGradReq(){
-        let major = this.props.major        
+        let major = this.props.major;
         let majorReq = getMajorReq(major);
         console.log(majorReq);
     }
 
     render() {
         console.log(this.props.courses);
-        this.checkGradReq();
+        let majorReq = getMajorReq(this.props.major);
+        this.grid = this.getSplitCourseGrid();
+        console.log(this.grid)
         return (
             <div id = 'reqsDiv' className = "sidebar hg-sidebar" >
                 <div>
                     Graduation Requriements for {this.props.major} majors:
                 </div>
                 <ul id = 'gradReqs'>
-        
+                    {majorReq.canGraduate(this.grid).map((req) => (
+                        <li style = {{color: 'red'}}>
+                            {req}
+                        </li>
+                    ))}
                 </ul>
           </div>
         )
