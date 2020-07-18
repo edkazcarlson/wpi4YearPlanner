@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Course from './Course'
-import Dragula from 'react-dragula'
 
 export class Board extends Component {
     constructor(props){

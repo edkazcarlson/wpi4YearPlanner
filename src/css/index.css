@@ -88,7 +88,7 @@ Following are based on https://flexbox.ninja/demos/holy-grail-layout/
  * Let's introduce bigger screen
  */
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
 	/**
 	 * Body items are now side by side
 	 */
@@ -108,7 +108,7 @@ Following are based on https://flexbox.ninja/demos/holy-grail-layout/
 	 * and are not really flexible anymore
 	 */
 	.hg-sidebar {
-		flex: 0 0 260px;
+		flex: auto;
 		border-left: 2px solid black;	
 	}
 }

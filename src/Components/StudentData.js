@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 
 export class StudentData extends Component {
-    constructor(props){
-        super(props);
-    }
 
     onChange = () => {
         this.props.changeMajor(document.getElementById('major').value);

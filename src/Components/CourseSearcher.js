@@ -22,7 +22,7 @@ export class CourseSearcher extends Component {
                         this.setState({chosenCourse: newValue});
                     }}
                     options={courseData().map((course) => course.courseTitle)}
-                    style={{ width: 300 }}
+                    style={{margin: 10, display: 'flex', alignItems: 'center' }}
                     renderInput={(params) => <TextField {...params} label="Course Search" variant="outlined" />}
                 />
                 <button id = "entryButton" type = "button" onClick = {this.addCourse}>Add Course</button>
@@ -30,7 +30,6 @@ export class CourseSearcher extends Component {
         )
     }
     addCourse = () =>{
-        console.log("hit")
         this.props.addCourse(this.state.chosenCourse);
     }
 }

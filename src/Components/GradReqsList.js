@@ -317,13 +317,10 @@ let csMajorSciEngReq = new gradRule(function(courses){
     let atLeastTwoTaken = false;
     courses.forEach(function(course){
         if (hardSci.includes(course.dept)){
-            console.log("hard sci inclues: " + course.level + course.dept);
             hardSciTaken.set(course.dept, hardSciTaken.get(course.dept) + 1);
-            console.log(hardSciTaken);
         }
     });
     hardSciTaken.forEach(function(val,key,map){
-        console.log(val)
         if (val >= 2){
             atLeastTwoTaken = true;
         }
@@ -505,7 +502,6 @@ export class GradReqsList extends Component {
 			for (let j = 0; j < 4 ; j++){
 				let term = this.props.courses[i][j];
 				term.forEach(function(course){
-                    console.log(course)
 					gridToReturn.push(splitAbbreviationLevel(course));
 				});
 			}
@@ -519,14 +515,11 @@ export class GradReqsList extends Component {
     checkGradReq(){
         let major = this.props.major;
         let majorReq = getMajorReq(major);
-        console.log(majorReq);
     }
 
     render() {
-        console.log(this.props.courses);
         let majorReq = getMajorReq(this.props.major);
         this.grid = this.getSplitCourseGrid();
-        console.log(this.grid)
         return (
             <div id = 'reqsDiv' className = "sidebar hg-sidebar" >
                 <div>
@@ -534,7 +527,7 @@ export class GradReqsList extends Component {
                 </div>
                 <ul id = 'gradReqs'>
                     {majorReq.canGraduate(this.grid).map((req) => (
-                        <li style = {{color: 'red'}}>
+                        <li key = {req} style = {{color: 'red'}}>
                             {req}
                         </li>
                     ))}

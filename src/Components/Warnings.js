@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
 export class Warnings extends Component {
-    constructor(props){
-        super(props);
-    }
 
     buildCourseWarnings() {
-        let takenCourses = new Set(this.props.outOfWPICourses);
+        let takenCourses = new Set();
+        this.props.outOfWPICourses.forEach(function(course){
+            takenCourses.add(course.split(' ')[0]);
+        })
         let courseJSON = this.props.courseJSON;
         let warnings = [];
         this.props.courses.forEach(year => {
