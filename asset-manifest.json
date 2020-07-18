@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/edkazcarlson.github.io/4YearPlanner/static/css/main.ed989b49.chunk.css",
-    "main.js": "/edkazcarlson.github.io/4YearPlanner/static/js/main.f395d712.chunk.js",
-    "main.js.map": "/edkazcarlson.github.io/4YearPlanner/static/js/main.f395d712.chunk.js.map",
-    "runtime-main.js": "/edkazcarlson.github.io/4YearPlanner/static/js/runtime-main.a5063dc5.js",
-    "runtime-main.js.map": "/edkazcarlson.github.io/4YearPlanner/static/js/runtime-main.a5063dc5.js.map",
-    "static/js/2.9ca27b1e.chunk.js": "/edkazcarlson.github.io/4YearPlanner/static/js/2.9ca27b1e.chunk.js",
-    "static/js/2.9ca27b1e.chunk.js.map": "/edkazcarlson.github.io/4YearPlanner/static/js/2.9ca27b1e.chunk.js.map",
-    "index.html": "/edkazcarlson.github.io/4YearPlanner/index.html",
-    "precache-manifest.b2b5e904861258bbfcf0762ba380adb7.js": "/edkazcarlson.github.io/4YearPlanner/precache-manifest.b2b5e904861258bbfcf0762ba380adb7.js",
-    "service-worker.js": "/edkazcarlson.github.io/4YearPlanner/service-worker.js",
-    "static/css/main.ed989b49.chunk.css.map": "/edkazcarlson.github.io/4YearPlanner/static/css/main.ed989b49.chunk.css.map",
-    "static/js/2.9ca27b1e.chunk.js.LICENSE.txt": "/edkazcarlson.github.io/4YearPlanner/static/js/2.9ca27b1e.chunk.js.LICENSE.txt"
+    "main.css": "/edkazcarlson.github.io/wpi4YearPlanner/static/css/main.ed989b49.chunk.css",
+    "main.js": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/main.f7ba347e.chunk.js",
+    "main.js.map": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/main.f7ba347e.chunk.js.map",
+    "runtime-main.js": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/runtime-main.02295020.js",
+    "runtime-main.js.map": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/runtime-main.02295020.js.map",
+    "static/js/2.9ca27b1e.chunk.js": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js",
+    "static/js/2.9ca27b1e.chunk.js.map": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js.map",
+    "index.html": "/edkazcarlson.github.io/wpi4YearPlanner/index.html",
+    "precache-manifest.a99e94af1387079b704c58185e742a51.js": "/edkazcarlson.github.io/wpi4YearPlanner/precache-manifest.a99e94af1387079b704c58185e742a51.js",
+    "service-worker.js": "/edkazcarlson.github.io/wpi4YearPlanner/service-worker.js",
+    "static/css/main.ed989b49.chunk.css.map": "/edkazcarlson.github.io/wpi4YearPlanner/static/css/main.ed989b49.chunk.css.map",
+    "static/js/2.9ca27b1e.chunk.js.LICENSE.txt": "/edkazcarlson.github.io/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.a5063dc5.js",
+    "static/js/runtime-main.02295020.js",
     "static/js/2.9ca27b1e.chunk.js",
     "static/css/main.ed989b49.chunk.css",
-    "static/js/main.f395d712.chunk.js"
+    "static/js/main.f7ba347e.chunk.js"
   ]
 }
