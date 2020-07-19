@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/wpi4YearPlanner/precache-manifest.a8b4f1bbef6695985af65e1450dd9b18.js"
+  "/wpi4YearPlanner/precache-manifest.8e0a01db5f19b398351f164f65538541.js"
 );
 
 self.addEventListener('message', (event) => {
