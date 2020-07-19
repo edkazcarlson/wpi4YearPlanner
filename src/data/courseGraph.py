@@ -6,7 +6,7 @@ class courseNode:
 	#returns a list of required classes in the tuple (department, level), cat is returned as a boolean, true being cat1
 	@staticmethod
 	def parseDesc(description):
-		splitDesc = re.split("Recommended background:", description)
+		splitDesc = re.findall(r"Recommended background:.*\.", description)
 		reqToReturn = []
 		cat = True
 		startYear = -1
@@ -17,7 +17,7 @@ class courseNode:
 					dept = re.findall('[a-zA-Z]{2,4}', req)
 					level = re.findall('[0-9]{3}[X]|[0-9]{4}', req)
 					reqToReturn.append((dept,level))
-		catRE = re.findall('Cat.*\s*[I]+\s', splitDesc[0])
+		catRE = re.findall('Cat.*\s*[I]+\s', description)
 		if len(catRE) > 0: #if cat is specified
 			cat =  len(re.findall('I',catRE[0])) == 1
 			print('cat: ', cat)
@@ -42,5 +42,5 @@ class courseNode:
 			json.dump(toJsonDict, outfile)
 	
 # c = courseNode('INTRODUCTION TO PROGRAM DESIGN', 1101, 'CS', 
-# 'This course introduces principles of computation and programming with an emphasis on program design. Topics include the design, implementation and testing of programs that use a variety of data structures (such as structures, lists, and trees), functions, conditionals, recursion and higher-­‐order functions. Students will be expected to design simple data models, and implement and debug programs in a functional programming language. Recommended background: none. Either CS 1101 or CS 1102 provides sufficient background for further courses in the CS department. Undergraduate credit may not be earned for both this course and CS 1102.')
+# 'Cat. I This course provides an introduction to differentiation and its applications. Topics covered include: functions and their graphs, limits, continuity, differentiation, linear approximation, chain rule, min/max problems, and applications of derivatives. Recommended background: Algebra, trigonometry and analytic geometry. Although the course will make use of computers, no programming experience is assumed. Students may not receive credit for both MA 1021 and MA 1020.')
 # c.toJson()

@@ -10,6 +10,7 @@ import './css/index.css'
 import './css/skeleton.css'
 
 
+
 export class MainPage extends Component {
   constructor(props){
     super(props);
@@ -29,11 +30,15 @@ export class MainPage extends Component {
                   major: 'CS',
                   courseJSON : null
                 }
-    fetch('../data/allCourses.json').then(response => response.json()).then((data) => {this.setState({courseJSON : data})});
+    fetch('allCourses.json')
+    .then((resp) => {console.log(resp.text())})
+    .then((response) => (response.json())
+    .then((data) => {console.log(data); this.setState({courseJSON : data})}));
     this.courseSet = new Set();
   }
 
   addCourse = (courseName) => {
+    console.log(this.state.courseJSON);
     if (this.courseSet.has(courseName)){
       alert("Already taken this course.");
     } else if (this.state.courseJSON.hasOwnProperty(courseName.split(" ")[0] + '.json')){
