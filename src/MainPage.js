@@ -46,7 +46,6 @@ export class MainPage extends Component {
   }
 
   addCourse = (courseName) => {
-    console.log(this.state.courseJSON);
     if (this.courseSet.has(courseName)){
       alert("Already taken this course.");
     } else if (this.state.courseJSON.hasOwnProperty(courseName.split(" ")[0] + '.json')){
