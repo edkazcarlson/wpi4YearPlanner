@@ -5,7 +5,7 @@ import './css/auto-complete.css'
 import './css/index.css'
 import './css/skeleton.css'
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route} from 'react-router-dom';
 
@@ -13,7 +13,7 @@ export class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router>
+        <Router /*basename={process.env.PUBLIC_URL}*/>
           <Switch>
             <Route path="/StudentResources">
               <StudentResources />

@@ -10,6 +10,8 @@ import './css/index.css'
 import './css/skeleton.css'
 
 
+
+
 export class MainPage extends Component {
   constructor(props){
     super(props);
@@ -29,8 +31,20 @@ export class MainPage extends Component {
                   major: 'CS',
                   courseJSON : null
                 }
-    fetch('../data/allCourses.json').then(response => response.json()).then((data) => {this.setState({courseJSON : data})});
-    this.courseSet = new Set();
+    if (window.location.href == 'https://edkazcarlson.github.io/wpi4YearPlanner/#/'){
+      fetch('data/allCourses.json')
+      // .then((resp) => {console.log(resp.text())})
+      .then((response) => (response.json()))
+      .then((data) => {console.log(data); this.setState({courseJSON : data})});
+      this.courseSet = new Set();
+    } else {
+      console.log()
+      fetch('wpi4YearPlanner/data/allCourses.json')
+      // .then((resp) => {console.log(resp.text())})
+      .then((response) => (response.json()))
+      .then((data) => {console.log(data); this.setState({courseJSON : data})});
+      this.courseSet = new Set();
+    }
   }
 
   addCourse = (courseName) => {
