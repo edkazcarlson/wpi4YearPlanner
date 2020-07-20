@@ -11,6 +11,7 @@ import './css/skeleton.css'
 
 
 
+
 export class MainPage extends Component {
   constructor(props){
     super(props);
@@ -37,7 +38,8 @@ export class MainPage extends Component {
       .then((data) => {console.log(data); this.setState({courseJSON : data})});
       this.courseSet = new Set();
     } else {
-      fetch('/data/allCourses.json')
+      console.log()
+      fetch('wpi4YearPlanner/data/allCourses.json')
       // .then((resp) => {console.log(resp.text())})
       .then((response) => (response.json()))
       .then((data) => {console.log(data); this.setState({courseJSON : data})});
