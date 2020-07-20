@@ -31,7 +31,7 @@ export class MainPage extends Component {
                   major: 'CS',
                   courseJSON : null
                 }
-    if (window.location.href == 'https://edkazcarlson.github.io/wpi4YearPlanner/'){
+    if (window.location.href == 'https://edkazcarlson.github.io/wpi4YearPlanner/#/'){
       fetch('data/allCourses.json')
       // .then((resp) => {console.log(resp.text())})
       .then((response) => (response.json()))
