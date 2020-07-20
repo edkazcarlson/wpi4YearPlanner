@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/wpi4YearPlanner/static/css/main.ed989b49.chunk.css",
-    "main.js": "/wpi4YearPlanner/static/js/main.c3cfdf7d.chunk.js",
-    "main.js.map": "/wpi4YearPlanner/static/js/main.c3cfdf7d.chunk.js.map",
+    "main.js": "/wpi4YearPlanner/static/js/main.95dfa1b5.chunk.js",
+    "main.js.map": "/wpi4YearPlanner/static/js/main.95dfa1b5.chunk.js.map",
     "runtime-main.js": "/wpi4YearPlanner/static/js/runtime-main.a2e468be.js",
     "runtime-main.js.map": "/wpi4YearPlanner/static/js/runtime-main.a2e468be.js.map",
-    "static/js/2.9ca27b1e.chunk.js": "/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js",
-    "static/js/2.9ca27b1e.chunk.js.map": "/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js.map",
+    "static/js/2.31a95912.chunk.js": "/wpi4YearPlanner/static/js/2.31a95912.chunk.js",
+    "static/js/2.31a95912.chunk.js.map": "/wpi4YearPlanner/static/js/2.31a95912.chunk.js.map",
     "index.html": "/wpi4YearPlanner/index.html",
-    "precache-manifest.a6f5442193a9e894908f94bf23fdcaf2.js": "/wpi4YearPlanner/precache-manifest.a6f5442193a9e894908f94bf23fdcaf2.js",
+    "precache-manifest.76933c099164a68196fe868db85c61e0.js": "/wpi4YearPlanner/precache-manifest.76933c099164a68196fe868db85c61e0.js",
     "service-worker.js": "/wpi4YearPlanner/service-worker.js",
     "static/css/main.ed989b49.chunk.css.map": "/wpi4YearPlanner/static/css/main.ed989b49.chunk.css.map",
-    "static/js/2.9ca27b1e.chunk.js.LICENSE.txt": "/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js.LICENSE.txt"
+    "static/js/2.31a95912.chunk.js.LICENSE.txt": "/wpi4YearPlanner/static/js/2.31a95912.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.a2e468be.js",
-    "static/js/2.9ca27b1e.chunk.js",
+    "static/js/2.31a95912.chunk.js",
     "static/css/main.ed989b49.chunk.css",
-    "static/js/main.c3cfdf7d.chunk.js"
+    "static/js/main.95dfa1b5.chunk.js"
   ]
 }
