@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1de8bbf07db4ee0da1ab44d95473bbf9",
+    "revision": "53cd312aa4079982f4f9c661ac534848",
     "url": "/wpi4YearPlanner/index.html"
   },
   {
-    "revision": "fac92ed70170fb8700d2",
-    "url": "/wpi4YearPlanner/static/css/main.03c13fe1.chunk.css"
+    "revision": "57597320e560eb3578a2",
+    "url": "/wpi4YearPlanner/static/css/main.ed989b49.chunk.css"
   },
   {
     "revision": "96c3522196a429bbb3bb",
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/wpi4YearPlanner/static/js/2.9ca27b1e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "fac92ed70170fb8700d2",
-    "url": "/wpi4YearPlanner/static/js/main.8f85efcd.chunk.js"
+    "revision": "57597320e560eb3578a2",
+    "url": "/wpi4YearPlanner/static/js/main.c3cfdf7d.chunk.js"
   },
   {
     "revision": "2a621f8acf30f9ef9d14",
