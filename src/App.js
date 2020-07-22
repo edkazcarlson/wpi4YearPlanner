@@ -12,6 +12,7 @@ import {
   Switch,
   Route} from 'react-router-dom';
 import { Paper } from '@material-ui/core';
+const darkModeCookieTag = 'darkMode'
 
 export class App extends Component {
   theme = () => (createMuiTheme({
@@ -23,10 +24,18 @@ export class App extends Component {
     super(props);
     this.state = {darkMode: true};
   }
+  componentDidMount(){
+    this.setState({darkMode: 
+      localStorage.getItem(darkModeCookieTag) != null ? 
+      localStorage.getItem(darkModeCookieTag) == 'true': 1 })
+    console.log(this.state);
+  }
 
   switchTheme = () => {
     console.log('switch them in app')
     this.setState({darkMode: !this.state.darkMode});
+    console.log(this.state)
+    localStorage.setItem(darkModeCookieTag, (!this.state.darkMode).valueOf().toString());
   }
 
   render() {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Button } from '@material-ui/core';
 
 export class StudentResourcesPage extends Component {
     constructor(props){
@@ -13,6 +14,9 @@ export class StudentResourcesPage extends Component {
         courseList.push(['Registrar Course Schedule', "https://www.wpi.edu/offices/registrar/course-registration/schedules"]);
         courseList.push(['Oscar Course evals', "https://oscar.wpi.edu/"]);
         courseList.push(['Rate My Professor', 'https://www.ratemyprofessors.com/campusRatings.jsp?sid=1220']);  
+        courseList.push(['Bannerweb', 'https://bannerweb.wpi.edu/']);
+        courseList.push(['Academic calendars and catalogs', 'https://www.wpi.edu/academics/calendar-catalogs'])
+        courseList.push(['Project Catalog', 'https://eprojects.wpi.edu/'])
         return courseList;
     }
 
@@ -32,11 +36,11 @@ export class StudentResourcesPage extends Component {
     render() {
         return (
             <div>
-                <a href = "./"><button>Return to main page</button></a>
+                <a href = "./"><Button variant = "outlined">Return to main page</Button></a>
                 <h1 id = "CourseResources" style = {{textAlign: 'center'}}>Course Resources</h1>
                 <ul id = "CourseResourcesList" style = {{width: '50%', margin: 'auto'}}>
                     {this.state.courseRes.map((tuple) => {
-                        return <li style = {{width: '50%', margin: 'auto'}} key = {tuple[0]}><a href = {tuple[1]}>{tuple[0]}</a></li>
+                        return <li style = {{width: '50%', margin: 'auto', fontSize : 16}} key = {tuple[0]}><a href = {tuple[1]}>{tuple[0]}</a></li>
                     })}
                 </ul>
                 <h1 id = "Stress Resources" style = {{textAlign: 'center'}}>Stress Resoucres</h1>
