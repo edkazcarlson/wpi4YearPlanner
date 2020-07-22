@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Button } from '@material-ui/core';
 
 export class Course extends Component {
 
@@ -13,7 +14,8 @@ export class Course extends Component {
             <div className="course" id = {this.props.courseName} draggable onDragStart = {(event) => this.onDragStart(event, this.props.courseName)}>
             {this.props.courseName}
             <br/>
-                <button onClick = {() => this.props.delCourse(this.props.courseName)}>Delete Course</button>
+                <Button variant="outlined"
+                onClick = {() => this.props.delCourse(this.props.courseName)}>Delete Course</Button>
             </div>
         )
     }

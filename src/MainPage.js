@@ -8,7 +8,7 @@ import Board from './Components/Board'
 import './css/auto-complete.css'
 import './css/index.css'
 import './css/skeleton.css'
-import { Button } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 
 
 export class MainPage extends Component {
@@ -113,10 +113,9 @@ export class MainPage extends Component {
   }
   
   render() {
-    console.log(this.state.style)
     return (
       <div >
-        <h2><span>4 Year Planner</span></h2>
+        <Typography variant = "h2">4 Year Planner</Typography>
         <div className = "holy-grail-body customBody">
           <div className = "holy-grail-sidebar-1"></div>
           <Board delCourse = {this.state.delCourse} 
@@ -127,7 +126,7 @@ export class MainPage extends Component {
           <div id = "sidebar" className = "sidebar hg-sidebar" style = {{textAlign: 'center'}}>
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
               <StudentData changeMajor = {this.changeMajor} major = {this.state.major}/>
-              <button onClick = {this.swapDarkMode}>Swap to {} mode</button>
+              <Button variant="outlined" onClick = {this.swapDarkMode}>Swap to {} mode</Button>
               <Warnings courseJSON = {this.state.courseJSON}
                courses = {this.state.courses} 
                outOfWPICourses = {this.state.outOfWPICourses}/>

@@ -4,7 +4,6 @@ import Course from './Course'
 export class Board extends Component {
     constructor(props){
         super(props);
-        this.dragulaList = [];
     }
 
     onDragStart = (event, taskName) => {
