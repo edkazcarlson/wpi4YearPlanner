@@ -109,14 +109,14 @@ export class MainPage extends Component {
   }
 
   swapDarkMode = () => {
-
+    this.props.switchTheme();
   }
   
   render() {
     console.log(this.state.style)
     return (
-      <div className = {this.state.style.darkMode}>
-        <h2 className={this.state.style.darkMode}><span>4 Year Planner</span></h2>
+      <div >
+        <h2><span>4 Year Planner</span></h2>
         <div className = "holy-grail-body customBody">
           <div className = "holy-grail-sidebar-1"></div>
           <Board delCourse = {this.state.delCourse} 
@@ -127,7 +127,7 @@ export class MainPage extends Component {
           <div id = "sidebar" className = "sidebar hg-sidebar" style = {{textAlign: 'center'}}>
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
               <StudentData changeMajor = {this.changeMajor} major = {this.state.major}/>
-              <Button>Swap to {} mode</Button>
+              <button onClick = {this.swapDarkMode}>Swap to {} mode</button>
               <Warnings courseJSON = {this.state.courseJSON}
                courses = {this.state.courses} 
                outOfWPICourses = {this.state.outOfWPICourses}/>

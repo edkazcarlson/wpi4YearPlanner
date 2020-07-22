@@ -1,4 +1,8 @@
 .customColor {
-    color: grey;
-    background-color: #61605c
+    color: #f5f5f5;
+    background-color: #36393f;
+}
+
+.buttonOverride {
+    color: f5f5f5;
 }

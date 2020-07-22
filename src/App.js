@@ -18,20 +18,21 @@ export class App extends Component {
   }
 
   switchTheme = () => {
-
+    this.setState({darkMode: !this.state.darkMode})
   }
 
   render() {
     let currentStyle = this.state.darkMode ? darkMode : lightMode; 
+    console.log(currentStyle)
     return (
-      <div className="App" className={currentStyle.darkMode}>
+      <div className={'App ', currentStyle.customColor}>
         <Router /*basename={process.env.PUBLIC_URL}*/>
           <Switch>
             <Route path="/StudentResources">
               <StudentResources />
             </Route>
             <Route path="/">
-              <Home />
+              <Home switchTheme = {this.switchTheme}/>
             </Route>
           </Switch>
         </Router>
