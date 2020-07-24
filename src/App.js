@@ -40,7 +40,7 @@ export class App extends Component {
   render() {
     return (
       <ThemeProvider theme = {this.theme()}>
-        <Paper>
+        <Paper sqauare = {true} style = {{borderRadius: '0px'}} >
           <div className= 'App'>
             <Router /*basename={process.env.PUBLIC_URL}*/>
               <Switch>

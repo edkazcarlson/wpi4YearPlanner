@@ -113,7 +113,6 @@ export class MainPage extends Component {
   }
   
   render() {
-    console.log(this.props.darkMode)
     return (
       <div >
         <Typography variant = "h2">4 Year Planner</Typography>
