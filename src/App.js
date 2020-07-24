@@ -34,7 +34,6 @@ export class App extends Component {
   switchTheme = () => {
     console.log('switch them in app')
     this.setState({darkMode: !this.state.darkMode});
-    console.log(this.state)
     localStorage.setItem(darkModeCookieTag, (!this.state.darkMode).valueOf().toString());
   }
 
@@ -49,7 +48,7 @@ export class App extends Component {
                   <StudentResources />
                 </Route>
                 <Route path="/">
-                  <Home switchTheme = {this.switchTheme}/>
+                  <Home switchTheme = {this.switchTheme} darkModeState  = {this.state.darkMode}/>
                 </Route>
               </Switch>
             </Router>

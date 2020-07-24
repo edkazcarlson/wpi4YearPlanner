@@ -113,6 +113,7 @@ export class MainPage extends Component {
   }
   
   render() {
+    console.log(this.props.darkMode)
     return (
       <div >
         <Typography variant = "h2">4 Year Planner</Typography>
@@ -126,7 +127,7 @@ export class MainPage extends Component {
           <div id = "sidebar" className = "sidebar hg-sidebar" style = {{textAlign: 'center'}}>
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
               <StudentData changeMajor = {this.changeMajor} major = {this.state.major}/>
-              <Button variant="outlined" onClick = {this.swapDarkMode}>Swap to {} mode</Button>
+              <Button variant="outlined" onClick = {this.swapDarkMode}>Swap to {this.props.darkModeState ? 'light': 'dark' } mode</Button>
               <Warnings courseJSON = {this.state.courseJSON}
                courses = {this.state.courses} 
                outOfWPICourses = {this.state.outOfWPICourses}/>

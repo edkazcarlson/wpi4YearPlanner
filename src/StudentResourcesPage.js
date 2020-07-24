@@ -35,7 +35,7 @@ export class StudentResourcesPage extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{minHeight: '100vh'}}>
                 <a href = "./"><Button variant = "outlined">Return to main page</Button></a>
                 <h1 id = "CourseResources" style = {{textAlign: 'center'}}>Course Resources</h1>
                 <ul id = "CourseResourcesList" style = {{width: '50%', margin: 'auto'}}>
