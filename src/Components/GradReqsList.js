@@ -174,7 +174,6 @@ let csMajorCSReq = new gradRule(function(courses){
     let deisgnBinFulfilled = false;
     let socialBinFulfilled = false;
     let highLevelCredCount = 0;
-    let totalCourseCountFulfilled = false;
     let totalCourses = 0;
     let accelPair1000Taken = false;
     let accelPairOOTaken = false;
@@ -247,6 +246,8 @@ let csMajorCSReq = new gradRule(function(courses){
                         socialBinFulfilled = true;
                     }
                     break;
+                default:
+                    alert('Unkown course passed into CS major req list');
             }
         }
 
@@ -277,8 +278,6 @@ let csMajorMathReq = new gradRule(function(courses){
     courses = filterCourses(courses, ['MA']);
     let probFulfilled = false;
     let statsFulfilled = false;
-    let atMostFour1000 = false;
-    let creditFullfilled = false;
     let creditsCounted = 0;
     let thousandLevelCoursesTaken = 0;
     courses.forEach(function(course){
@@ -400,12 +399,9 @@ let meMajorReq = new gradRule(function(courses){
             req38WithBME = true;
         }
     });
-    let req31Done = req31WithES || req31WithNonES;
     //see the # of mathsci courses, then decide if you can use them for specific row req or you can use for row 25/26
     let possibleMiscMathSciCourses = filterCourses(meCourses, ['MA', 'PH', 'BB', 'BCB', 'CH', 'CS', 'GE']);
     let leeWaySciCourses = possibleMiscMathSciCourses.length - 2;
-    let mustUseSciForThermo = false;
-    let clear = false;
     let engAbove2000Count = 0;
     if (leeWaySciCourses == 0 && (includesCourse(possibleMiscMathSciCourses, 'CS', 1101) || includesCourse(possibleMiscMathSciCourses, 'CS', 1004))){ 
         //must use cs class towards the mathsci req
@@ -512,10 +508,6 @@ export class GradReqsList extends Component {
 		return gridToReturn;
 	}
 
-    checkGradReq(){
-        let major = this.props.major;
-        let majorReq = getMajorReq(major);
-    }
 
     render() {
         let majorReq = getMajorReq(this.props.major);

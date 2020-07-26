@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {courseData} from '../data/reactGetCourses'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { Button, Paper } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 
 
@@ -25,7 +25,8 @@ export class CourseSearcher extends Component {
                     options={courseData().map((course) => course.courseTitle)}
                     renderInput={(params) => <TextField {...params} label="Course Search" variant="outlined" />}
                 />
-                <Button variant="outlined" id = "entryButton" type = "button" onClick = {this.addCourse}>Add Course</Button>
+                <Button variant="outlined" id = "entryButton" type = "button" 
+                onClick = {this.addCourse} style = {{margin: '5px'}}>Add Course</Button>
             </div>
         )
     }

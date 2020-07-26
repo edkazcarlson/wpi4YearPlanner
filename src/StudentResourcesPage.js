@@ -44,7 +44,8 @@ export class StudentResourcesPage extends Component {
                     })}
                 </ul>
                 <h1 id = "Stress Resources" style = {{textAlign: 'center'}}>Stress Resoucres</h1>
-                <div id = "StressResourcesList" className="yearWrapper" style = {{flex: 'auto'}} >
+                <div id = "StressResourcesList" className="yearWrapper" 
+                style = {{flex: 'auto', flexWrap : 'wrap'}} >
                     {this.state.stressRes.map((tuple, index) => {
                         console.log(index)
                         return (

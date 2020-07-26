@@ -4,8 +4,6 @@ import StudentResources from './StudentResourcesPage';
 import './css/auto-complete.css'
 import './css/index.css'
 import './css/skeleton.css'
-import lightMode from './css/lightMode.module.css'
-import darkMode from './css/darkMode.module.css'
 import {ThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 import {
   HashRouter as Router,
@@ -28,11 +26,9 @@ export class App extends Component {
     this.setState({darkMode: 
       localStorage.getItem(darkModeCookieTag) != null ? 
       localStorage.getItem(darkModeCookieTag) == 'true': 1 })
-    console.log(this.state);
   }
 
   switchTheme = () => {
-    console.log('switch them in app')
     this.setState({darkMode: !this.state.darkMode});
     localStorage.setItem(darkModeCookieTag, (!this.state.darkMode).valueOf().toString());
   }
@@ -40,7 +36,7 @@ export class App extends Component {
   render() {
     return (
       <ThemeProvider theme = {this.theme()}>
-        <Paper sqauare = {true} style = {{borderRadius: '0px'}} >
+        <Paper style = {{borderRadius: '0px'}} >
           <div className= 'App'>
             <Router /*basename={process.env.PUBLIC_URL}*/>
               <Switch>
