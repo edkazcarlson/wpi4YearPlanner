@@ -115,7 +115,7 @@ export class MainPage extends Component {
   render() {
     return (
       <div >
-        <Typography variant = "h2" style = {{padding: '5px'}}>4 Year Planner</Typography>
+        <Typography variant = "h2" style = {{padding: '5px', textAlign : 'center'}}>Unofficial WPI 4 Year Planner</Typography>
         <div className = "holy-grail-body customBody">
           <div className = "holy-grail-sidebar-1"></div>
           <Board delCourse = {this.state.delCourse} 

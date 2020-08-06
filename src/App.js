@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Home from './MainPage';
 import StudentResources from './StudentResourcesPage';
 import './css/auto-complete.css'
-import './css/index.css'
 import './css/skeleton.css'
 import {ThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 import {
