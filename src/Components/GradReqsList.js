@@ -443,6 +443,9 @@ let meMajorReq = new gradRule(function(courses){
     return toReturn;
 });
 
+let bbMajorLabReq = new gradRule(function(courses){
+
+})
 
 class majorGradReq{
     constructor(){
