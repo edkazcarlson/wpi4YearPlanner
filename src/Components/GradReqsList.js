@@ -99,7 +99,7 @@ let huaReq = new gradRule(function(courses){
         }
     })
 
-    let totalCourseCountFulfilled = huaCourses.size >= 5;
+    let totalCourseCountFulfilled = huaCourses.length >= 5;
     let toReturn = [];
     if (!depthCountFulfilled){
         toReturn.push("Need at least 3 non capstone depth courses");
@@ -139,7 +139,7 @@ let ssReq = new gradRule(function(courses){
 
     });
     let passing = false;
-    passing = courses.size >= 2;
+    passing = courses.length >= 2;
     let toReturn = [];
     if (!passing){
         toReturn.push('Need 2 social science classes');
@@ -149,7 +149,7 @@ let ssReq = new gradRule(function(courses){
 
 let iqpReq = new gradRule(function(courses){
     courses = filterCourses(courses, 'IQP');
-    let passing = courses.size >= 3;
+    let passing = courses.length >= 3;
     let toReturn = [];
     if (!passing){
         toReturn.push('Need to take IQP');
@@ -159,7 +159,7 @@ let iqpReq = new gradRule(function(courses){
 
 let mqpReq = new gradRule(function(courses){
     courses = filterCourses(courses, 'MQP');
-    let passing = courses.size >= 3;
+    let passing = courses.length >= 3;
     let toReturn = [];
     if (!passing){
         toReturn.push('Need to take MQP');
@@ -246,8 +246,6 @@ let csMajorCSReq = new gradRule(function(courses){
                         socialBinFulfilled = true;
                     }
                     break;
-                default:
-                    alert('Unkown course passed into CS major req list');
             }
         }
 
@@ -312,7 +310,7 @@ let csMajorSciEngReq = new gradRule(function(courses){
     courses = filterCourses(courses, ['BB', 'BME', 'CE', 'CH', 'CHE', 'ECE', 'ES', 'GE', 'ME', 'PH', 'RBE']);
     let hardSciTaken = new Map([['BB', 0], ['CH',0], ['GE',0], ['PH',0]]);
     let hardSci = ['BB', 'CH', 'GE', 'PH'];
-    let coursesTaken = courses.size;
+    let coursesTaken = courses.length;
     let atLeastTwoTaken = false;
     courses.forEach(function(course){
         if (hardSci.includes(course.dept)){
@@ -461,7 +459,7 @@ class majorGradReq{
         this.reqs.forEach(function(req){
             changesNeeded = changesNeeded.concat(req.fulfilled(courseObjSet));
         });
-        if (courses.size < 45 && changesNeeded.size == 0){
+        if (courses.length < 45 && changesNeeded.length == 0){
             changesNeeded = changesNeeded.concat("Need 3 free elective courses");
         }
         

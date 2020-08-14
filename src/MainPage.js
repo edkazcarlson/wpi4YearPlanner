@@ -32,21 +32,19 @@ export class MainPage extends Component {
                 }
     if (window.location.href == 'https://edkazcarlson.github.io/wpi4YearPlanner/#/'){
       fetch('data/allCourses.json')
-      // .then((resp) => {console.log(resp.text())})
-      .then((response) => (response.json()))
-      .then((data) => {console.log(data); this.setState({courseJSON : data})});
-      this.courseSet = new Set();
-    } else {
-      console.log()
-      fetch('wpi4YearPlanner/data/allCourses.json')
-      // .then((resp) => {console.log(resp.text())})
       .then((response) => (response.json()))
       .then((data) => {this.setState({courseJSON : data})});
+      this.courseSet = new Set();
+    } else {
+      fetch('wpi4YearPlanner/data/allCourses.json')
+      .then((response) => (response.json()))
+      .then((data) => { this.setState({courseJSON : data})});
       this.courseSet = new Set();
     }
   }
 
   addCourse = (courseName) => {
+    console.log(courseName.split(" ")[0] + '.json');
     if (this.courseSet.has(courseName)){
       alert("Already taken this course.");
     } else if (this.state.courseJSON.hasOwnProperty(courseName.split(" ")[0] + '.json')){
