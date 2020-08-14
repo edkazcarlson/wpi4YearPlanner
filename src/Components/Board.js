@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import Course from './Course'
 
 export class Board extends Component {
-    constructor(props){
-        super(props);
-    }
-
     onDragStart = (event, taskName) => {
     	event.dataTransfer.setData("taskName", taskName);
 	}

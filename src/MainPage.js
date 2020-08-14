@@ -41,7 +41,7 @@ export class MainPage extends Component {
       fetch('wpi4YearPlanner/data/allCourses.json')
       // .then((resp) => {console.log(resp.text())})
       .then((response) => (response.json()))
-      .then((data) => {console.log(data); this.setState({courseJSON : data})});
+      .then((data) => {this.setState({courseJSON : data})});
       this.courseSet = new Set();
     }
   }
@@ -115,7 +115,7 @@ export class MainPage extends Component {
   render() {
     return (
       <div >
-        <Typography variant = "h2">4 Year Planner</Typography>
+        <Typography variant = "h2" style = {{padding: '5px', textAlign : 'center'}}>Unofficial WPI 4 Year Planner</Typography>
         <div className = "holy-grail-body customBody">
           <div className = "holy-grail-sidebar-1"></div>
           <Board delCourse = {this.state.delCourse} 
@@ -126,7 +126,8 @@ export class MainPage extends Component {
           <div id = "sidebar" className = "sidebar hg-sidebar" style = {{textAlign: 'center'}}>
               <CourseSearcher addCourse = {this.addCourse.bind(this)}/>
               <StudentData changeMajor = {this.changeMajor} major = {this.state.major}/>
-              <Button variant="outlined" onClick = {this.swapDarkMode}>Swap to {this.props.darkModeState ? 'light': 'dark' } mode</Button>
+              <Button variant="outlined" onClick = {this.swapDarkMode}
+              style = {{margin: '5px'}}>Swap to {this.props.darkModeState ? 'light': 'dark' } mode</Button>
               <Warnings courseJSON = {this.state.courseJSON}
                courses = {this.state.courses} 
                outOfWPICourses = {this.state.outOfWPICourses}/>
